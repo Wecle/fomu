@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import MaterialBar from '@/components/MaterialBar'
-import FormContainer from '@/components/FormContainer'
+import MaterialBar from '@/components/MaterialBar/MaterialBar'
+import FormContainer from '@/components/FormContainer/FormContainer'
 import Item from '@/components/MaterialBar/Item'
 import {
   DndContext,
@@ -15,12 +15,10 @@ import { arrayMove } from '@dnd-kit/sortable'
 
 const Home = () => {
   const [widgets, setWidgets] = useState<MaterialItem[]>([])
-  const [activeMaterial, setActiveMaterial] = useState<MaterialItem | null>(
-    null
-  )
+  const [activeWidget, setActiveWidget] = useState<MaterialItem | null>(null)
 
-  const addMaterialItem = (item: MaterialItem) => {
-    console.log('addMaterialItem', item)
+  const addWidget = (widget: MaterialItem) => {
+    console.log('addWidget', widget)
   }
 
   const getCodeId = useCallback(
@@ -33,36 +31,50 @@ const Home = () => {
     [widgets]
   )
 
-  const updateWidgets = useCallback(
-    ({ active, over }: DragOverEvent) => {
-      setWidgets((prevWidgets) => {
-        const activeCodeId = active.data.current?.codeId
-        const overCodeId = over?.id
-        const activeWidget = widgets.find((w) => w.codeId === activeCodeId)
+  const reorderExistingWidget = (
+    widgets: MaterialItem[],
+    oldIndex: number,
+    newIndex: number
+  ) => {
+    return arrayMove(widgets, oldIndex, newIndex)
+  }
 
-        if (activeWidget) {
-          const oldIndex = prevWidgets.findIndex(
-            (w) => w.codeId === activeCodeId
+  const insertNewWidget = (
+    widgets: MaterialItem[],
+    newWidgetData: MaterialItem,
+    insertIndex: number
+  ) => {
+    return [
+      ...widgets.slice(0, insertIndex),
+      newWidgetData,
+      ...widgets.slice(insertIndex)
+    ]
+  }
+
+  const updateWidgets = useCallback(({ active, over }: DragOverEvent) => {
+    setWidgets((prevWidgets) => {
+      const activeCodeId = active.data.current?.codeId as string
+      const overCodeId = over?.id
+
+      const oldIndex = prevWidgets.findIndex((w) => w.codeId === activeCodeId)
+      const newIndex = prevWidgets.findIndex((w) => w.codeId === overCodeId)
+
+      const isExistingWidget = oldIndex !== -1
+
+      return isExistingWidget
+        ? reorderExistingWidget(prevWidgets, oldIndex, newIndex)
+        : insertNewWidget(
+            prevWidgets,
+            JSON.parse(JSON.stringify(active.data.current)),
+            newIndex
           )
-          const newIndex = prevWidgets.findIndex((w) => w.codeId === overCodeId)
-          return arrayMove(prevWidgets, oldIndex, newIndex)
-        } else {
-          const newIndex = prevWidgets.findIndex((w) => w.codeId === overCodeId)
-          const newWidgets = [...prevWidgets]
-          newWidgets.splice(newIndex, 0, active.data.current as MaterialItem)
-          return newWidgets
-        }
-      })
-    },
-    [widgets]
-  )
+    })
+  }, [])
 
   const handleDragStart = ({ active }: DragStartEvent) => {
-    console.log(active)
-    const config = active.data.current as MaterialItem
-    config.codeId = getCodeId(config)
-
-    setActiveMaterial(config)
+    const material = active.data.current as MaterialItem
+    material.codeId = getCodeId(material)
+    setActiveWidget(material)
   }
 
   const handleDragOver = useCallback(
@@ -76,7 +88,7 @@ const Home = () => {
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
     updateWidgets(event)
-    setActiveMaterial(null)
+    setActiveWidget(null)
   }
 
   return (
@@ -86,9 +98,9 @@ const Home = () => {
       onDragEnd={handleDragEnd}
     >
       <Box display="flex" h="100vh" w="100vw">
-        <MaterialBar addMaterialItem={addMaterialItem} />
+        <MaterialBar addMaterialItem={addWidget} />
         <Box flex="1" p="4" bg="gray.100">
-          <FormContainer widgets={widgets} />
+          <FormContainer widgets={widgets} activeWidget={activeWidget} />
         </Box>
       </Box>
       <DragOverlay
@@ -96,7 +108,7 @@ const Home = () => {
           duration: 200
         }}
       >
-        {activeMaterial ? <Item type={activeMaterial.type} /> : null}
+        {activeWidget ? <Item type={activeWidget.type} /> : null}
       </DragOverlay>
     </DndContext>
   )

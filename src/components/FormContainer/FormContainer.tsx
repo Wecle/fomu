@@ -5,9 +5,10 @@ import SortableItem from './SortableItem'
 
 interface FormContainerProps {
   widgets: MaterialItem[]
+  activeWidget: MaterialItem | null
 }
 
-const FormContainer = ({ widgets }: FormContainerProps) => {
+const FormContainer = ({ widgets, activeWidget }: FormContainerProps) => {
   return (
     <Box w="100%" h="100%" margin="auto" bg="white">
       <SortableContext
@@ -15,7 +16,12 @@ const FormContainer = ({ widgets }: FormContainerProps) => {
         strategy={verticalListSortingStrategy}
       >
         {widgets.map((widget) => (
-          <SortableItem key={widget.codeId} idx={widget.codeId}>
+          <SortableItem
+            key={widget.codeId}
+            idx={widget.codeId}
+            item={widget}
+            dragging={widget.codeId === activeWidget?.codeId}
+          >
             <Box p="1">
               <Box borderWidth="1px" p="2">
                 <Text>
