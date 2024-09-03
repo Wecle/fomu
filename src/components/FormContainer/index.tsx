@@ -1,24 +1,31 @@
-import { Box } from '@chakra-ui/react'
-import { useDroppable } from '@dnd-kit/core'
+import { Box, Text } from '@chakra-ui/react'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { MaterialItem, materialNameMap } from '../Materials/materials'
+import SortableItem from './SortableItem'
 
 interface FormContainerProps {
-  components: React.ReactNode[]
+  widgets: MaterialItem[]
 }
 
-const FormContainer = ({ components }: FormContainerProps) => {
-  const { setNodeRef } = useDroppable({
-    id: 'form-container'
-  })
-
+const FormContainer = ({ widgets }: FormContainerProps) => {
   return (
-    <Box ref={setNodeRef} w="100%" h="100%" margin="auto" bg="white">
-      {components.map((Component, index) => (
-        <Box key={index} p="1">
-          <Box borderWidth="1px" p="2">
-            {Component}
-          </Box>
-        </Box>
-      ))}
+    <Box w="100%" h="100%" margin="auto" bg="white">
+      <SortableContext
+        items={widgets.map((w) => w.codeId)}
+        strategy={verticalListSortingStrategy}
+      >
+        {widgets.map((widget) => (
+          <SortableItem key={widget.codeId} idx={widget.codeId}>
+            <Box p="1">
+              <Box borderWidth="1px" p="2">
+                <Text>
+                  {materialNameMap[widget.type as keyof typeof materialNameMap]}
+                </Text>
+              </Box>
+            </Box>
+          </SortableItem>
+        ))}
+      </SortableContext>
     </Box>
   )
 }

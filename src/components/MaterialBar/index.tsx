@@ -1,7 +1,5 @@
-import React from 'react'
 import {
   Box,
-  Text,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -9,13 +7,14 @@ import {
   AccordionIcon,
   SimpleGrid
 } from '@chakra-ui/react'
-import { materialConfig } from '../Materials/materials'
+import { materialConfig, MaterialItem } from '../Materials/materials'
+import DragableItem from './DragableItem'
 
 interface MaterialBarProps {
-  addComponent: (component: React.ReactNode) => void
+  addMaterialItem: (item: MaterialItem) => void
 }
 
-const MaterialBar = ({ addComponent }: MaterialBarProps) => {
+const MaterialBar = ({ addMaterialItem }: MaterialBarProps) => {
   return (
     <Box
       bg="gray.200"
@@ -51,18 +50,11 @@ const MaterialBar = ({ addComponent }: MaterialBarProps) => {
             <AccordionPanel pb={4}>
               <SimpleGrid columns={2} spacing={2}>
                 {category.items.map((item, idx) => (
-                  <Box
+                  <DragableItem
                     key={idx}
-                    p="2"
-                    mb="2"
-                    bg="white"
-                    borderWidth="1px"
-                    borderRadius="md"
-                    cursor="grab"
-                    onClick={() => addComponent(<Text>{item}</Text>)}
-                  >
-                    {item}
-                  </Box>
+                    item={item}
+                    addMaterialItem={addMaterialItem}
+                  />
                 ))}
               </SimpleGrid>
             </AccordionPanel>

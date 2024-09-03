@@ -1,15 +1,16 @@
 import React from 'react'
+import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
 interface SortableItemProps {
-  id: string
+  idx: UniqueIdentifier
   children: React.ReactNode
 }
 
-const SortableItem = ({ id, children }: SortableItemProps) => {
+const SortableItem = ({ idx, children }: SortableItemProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id })
+    useSortable({ id: idx })
 
   const style = {
     transform: CSS.Transform.toString(transform),
