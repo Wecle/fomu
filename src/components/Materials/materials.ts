@@ -3,6 +3,8 @@ export interface MaterialItem {
   name: string
   icon: string
   type: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  defaultValue?: any
   widgetType: string
 }
 
@@ -17,6 +19,12 @@ export const materialNameMap = {
   radio: '单选框组'
 }
 
+export const widgetTypeMap = {
+  TEXT_WIDGET: 'textWidget',
+  TEXTAREA_WIDGET: 'textareaWidget',
+  RADIO_WIDGET: 'radioWidget'
+}
+
 export const materialConfig: Material[] = [
   {
     category: '基础字段',
@@ -26,21 +34,21 @@ export const materialConfig: Material[] = [
         name: materialNameMap.text,
         icon: 'text',
         type: 'text',
-        widgetType: 'textWidget'
+        widgetType: widgetTypeMap['TEXT_WIDGET']
       },
       {
         codeId: '',
         name: materialNameMap.textarea,
         icon: 'textarea',
         type: 'textarea',
-        widgetType: 'textareaWidget'
+        widgetType: widgetTypeMap['TEXTAREA_WIDGET']
       },
       {
         codeId: '',
         name: materialNameMap.radio,
         icon: 'radio',
         type: 'radio',
-        widgetType: 'radioWidget'
+        widgetType: widgetTypeMap['RADIO_WIDGET']
       }
     ]
   }
@@ -99,3 +107,30 @@ export const materialConfig: Material[] = [
   //   ]
   // }
 ]
+
+const materialMap = {
+  [widgetTypeMap['TEXT_WIDGET']]: 'FmText',
+  [widgetTypeMap['TEXTAREA_WIDGET']]: 'FmTextarea',
+  [widgetTypeMap['RADIO_WIDGET']]: 'FmRadio'
+}
+
+export const renderMaterialItem = async (
+  widgetType: MaterialItem['widgetType']
+) => {
+  const componentName = materialMap[widgetType]
+  if (!componentName) {
+    throw new Error(`未找到对应的组件：${widgetType}`)
+  }
+
+  try {
+    const module = await import('./index')
+    if (componentName in module) {
+      return module[componentName as keyof typeof module]
+    } else {
+      throw new Error(`组件 ${componentName} 未在 index.ts 中导出`)
+    }
+  } catch (error) {
+    console.error(`加载组件失败：${componentName}`, error)
+    throw error
+  }
+}
