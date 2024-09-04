@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { MaterialItem, materialNameMap } from '../Materials/materials'
-import SortableItem from './SortableItem'
+import SortableItem from '../Item/SortableItem'
 
 interface FormContainerProps {
   widgets: MaterialItem[]
@@ -16,7 +16,7 @@ const FormContainer = ({ widgets, activeWidget }: FormContainerProps) => {
         strategy={verticalListSortingStrategy}
       >
         {widgets.map((widget) => (
-          <SortableItem
+          <SortableItem<MaterialItem>
             key={widget.codeId}
             idx={widget.codeId}
             item={widget}

@@ -1,11 +1,10 @@
 import { Box } from '@chakra-ui/react'
-import { materialNameMap } from '../Materials/materials'
 
 interface ItemProps {
-  type: string
+  value: string
 }
 
-const Item = ({ type }: ItemProps) => {
+const Item = ({ value }: ItemProps) => {
   return (
     <Box
       p="2"
@@ -15,7 +14,7 @@ const Item = ({ type }: ItemProps) => {
       borderRadius="md"
       cursor="grab"
     >
-      {materialNameMap[type as keyof typeof materialNameMap]}
+      {value}
     </Box>
   )
 }

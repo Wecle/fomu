@@ -2,16 +2,22 @@ import React from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { MaterialItem } from '../Materials/materials'
+import { AnyObject } from '@/helpers/type'
 
-interface SortableItemProps {
+interface SortableItemProps<T> {
   idx: UniqueIdentifier
-  item: MaterialItem
+  item: T
   dragging: boolean
-  children: React.ReactNode
 }
 
-const SortableItem = ({ idx, item, dragging, children }: SortableItemProps) => {
+const SortableItem = <T,>({
+  idx,
+  item,
+  dragging,
+  children
+}: SortableItemProps<T> & {
+  children: React.ReactNode
+}) => {
   const {
     attributes,
     listeners,
@@ -19,7 +25,7 @@ const SortableItem = ({ idx, item, dragging, children }: SortableItemProps) => {
     transform,
     transition,
     isDragging
-  } = useSortable({ id: idx, data: item })
+  } = useSortable({ id: idx, data: item as AnyObject })
 
   const style = {
     transform: CSS.Transform.toString(transform),

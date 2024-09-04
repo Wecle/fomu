@@ -7,8 +7,13 @@ import {
   AccordionIcon,
   SimpleGrid
 } from '@chakra-ui/react'
-import { materialConfig, MaterialItem } from '../Materials/materials'
-import DragableItem from './DragableItem'
+import {
+  materialConfig,
+  MaterialItem,
+  materialNameMap
+} from '../Materials/materials'
+import DragableItem from '../Item/DragableItem'
+import Item from '../Item/Item'
 
 interface MaterialBarProps {
   addMaterialItem: (item: MaterialItem) => void
@@ -49,12 +54,21 @@ const MaterialBar = ({ addMaterialItem }: MaterialBarProps) => {
             </AccordionButton>
             <AccordionPanel pb={4}>
               <SimpleGrid columns={2} spacing={2}>
-                {category.items.map((item, idx) => (
-                  <DragableItem
-                    key={idx}
+                {category.items.map((item) => (
+                  <DragableItem<MaterialItem>
+                    key={item.type}
+                    type={item.type}
                     item={item}
-                    addMaterialItem={addMaterialItem}
-                  />
+                    onClick={addMaterialItem}
+                  >
+                    <Item
+                      value={
+                        materialNameMap[
+                          item.type as keyof typeof materialNameMap
+                        ]
+                      }
+                    />
+                  </DragableItem>
                 ))}
               </SimpleGrid>
             </AccordionPanel>

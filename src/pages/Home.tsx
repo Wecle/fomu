@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { Box } from '@chakra-ui/react'
 import MaterialBar from '@/components/MaterialBar/MaterialBar'
 import FormContainer from '@/components/FormContainer/FormContainer'
-import Item from '@/components/MaterialBar/Item'
+import Item from '@/components/Item/Item'
 import {
   DndContext,
   DragEndEvent,
@@ -10,7 +10,7 @@ import {
   DragOverlay,
   DragOverEvent
 } from '@dnd-kit/core'
-import { MaterialItem } from '@/components/Materials/materials'
+import { MaterialItem, materialNameMap } from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
 
 const Home = () => {
@@ -108,7 +108,13 @@ const Home = () => {
           duration: 200
         }}
       >
-        {activeWidget ? <Item type={activeWidget.type} /> : null}
+        {activeWidget ? (
+          <Item
+            value={
+              materialNameMap[activeWidget.type as keyof typeof materialNameMap]
+            }
+          />
+        ) : null}
       </DragOverlay>
     </DndContext>
   )
