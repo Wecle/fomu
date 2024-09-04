@@ -22,7 +22,7 @@ interface MaterialBarProps {
 const MaterialBar = ({ addMaterialItem }: MaterialBarProps) => {
   return (
     <Box
-      bg="gray.200"
+      bg="slate.100"
       width="300px"
       flexShrink={0}
       p="4"
@@ -45,7 +45,7 @@ const MaterialBar = ({ addMaterialItem }: MaterialBarProps) => {
         defaultIndex={materialConfig.map((_, index) => index)}
       >
         {materialConfig.map((category, index) => (
-          <AccordionItem key={index}>
+          <AccordionItem key={index} borderTop="none">
             <AccordionButton>
               <Box flex="1" textAlign="left">
                 {category.category}

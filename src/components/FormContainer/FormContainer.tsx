@@ -10,7 +10,7 @@ interface FormContainerProps {
 
 const FormContainer = ({ widgets, activeWidget }: FormContainerProps) => {
   return (
-    <Box w="100%" h="100%" margin="auto" bg="white">
+    <Box w="100%" h="100%" margin="auto" bg="white" borderRadius="md">
       <SortableContext
         items={widgets.map((w) => w.codeId)}
         strategy={verticalListSortingStrategy}

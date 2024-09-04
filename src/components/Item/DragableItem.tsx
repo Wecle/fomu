@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { UniqueIdentifier, useDraggable } from '@dnd-kit/core'
-import { AnyObject } from '@/helpers/type'
+import { AnyObject } from '@/types/type'
 
 interface DragableItemProps<T> {
   type: UniqueIdentifier

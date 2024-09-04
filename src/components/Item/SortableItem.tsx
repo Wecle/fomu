@@ -2,7 +2,7 @@ import React from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { AnyObject } from '@/helpers/type'
+import { AnyObject } from '@/types/type'
 
 interface SortableItemProps<T> {
   idx: UniqueIdentifier
