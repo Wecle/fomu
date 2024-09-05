@@ -1,5 +1,6 @@
-import { Box } from '@chakra-ui/react'
 import { useState, useEffect, useCallback } from 'react'
+import { Box } from '@chakra-ui/react'
+import { SpinnerIcon, WarningTwoIcon } from '@chakra-ui/icons'
 
 interface ItemParams {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,6 +14,21 @@ export type ItemProps = ItemParams & {
   ): React.ReactElement | Promise<React.ReactElement>
 }
 
+const DefaultItem = ({ value }: ItemParams) => {
+  return (
+    <Box
+      p="2"
+      mb="2"
+      bg="white"
+      borderWidth="1px"
+      borderRadius="md"
+      cursor="grab"
+    >
+      {value}
+    </Box>
+  )
+}
+
 const Item = ({ value, dragging, renderItem }: ItemProps) => {
   const [renderedContent, setRenderedContent] =
     useState<React.ReactElement | null>(null)
@@ -24,8 +40,9 @@ const Item = ({ value, dragging, renderItem }: ItemProps) => {
         setRenderedContent(result)
       } catch (error) {
         console.error('render error:', error)
-        // TODO: add error block or callback
-        setRenderedContent(<Box>render error</Box>)
+        setRenderedContent(
+          <DefaultItem value={<WarningTwoIcon color="red.300" />} />
+        )
       }
     }
   }, [dragging, renderItem, value])
@@ -35,24 +52,14 @@ const Item = ({ value, dragging, renderItem }: ItemProps) => {
   }, [renderContent])
 
   if (renderItem && !renderedContent) {
-    // TODO: add loading block
-    return <Box>Loading...</Box>
+    return (
+      <DefaultItem
+        value={<SpinnerIcon className="animate-spin" color="purple.200" />}
+      />
+    )
   }
 
-  return (
-    renderedContent || (
-      <Box
-        p="2"
-        mb="2"
-        bg="white"
-        borderWidth="1px"
-        borderRadius="md"
-        cursor="grab"
-      >
-        {value}
-      </Box>
-    )
-  )
+  return renderedContent || <DefaultItem value={value} />
 }
 
 export default Item

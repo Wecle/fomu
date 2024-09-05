@@ -1,8 +1,8 @@
 import { Box, VStack } from '@chakra-ui/react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { MaterialItem, renderMaterialItem } from '../Materials/materials'
+import { MaterialItem } from '../Materials/materials'
 import SortableItem from '../Item/SortableItem'
-import Item, { ItemProps } from '../Item/Item'
+import WidgetItem from '../Item/WidgetItem'
 
 interface FormContainerProps {
   materials: MaterialItem[]
@@ -10,11 +10,6 @@ interface FormContainerProps {
 }
 
 const FormContainer = ({ materials, activeMaterial }: FormContainerProps) => {
-  const renderItem = async (widget: MaterialItem, props: ItemProps) => {
-    const Component = await renderMaterialItem(widget.widgetType)
-    return <Component {...props} />
-  }
-
   return (
     <Box w="100%" h="100%" margin="auto" p="2" bg="white" borderRadius="md">
       <SortableContext
@@ -31,13 +26,12 @@ const FormContainer = ({ materials, activeMaterial }: FormContainerProps) => {
               dragging={material.codeId === activeMaterial?.codeId}
             >
               {({ isDragging }) => (
-                <Item
-                  value={material.defaultValue}
+                <WidgetItem
+                  material={material}
                   dragging={
                     isDragging || material.codeId === activeMaterial?.codeId
                   }
-                  renderItem={(props) => renderItem(material, props)}
-                ></Item>
+                ></WidgetItem>
               )}
             </SortableItem>
           ))}

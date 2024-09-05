@@ -1,15 +1,15 @@
 import { Box } from '@chakra-ui/react'
 import MaterialBar from '@/components/MaterialBar/MaterialBar'
 import FormContainer from '@/components/FormContainer/FormContainer'
-import Item from '@/components/Item/Item'
-import { DndContext, DragOverlay } from '@dnd-kit/core'
-import { materialNameMap } from '@/components/Materials/materials'
+import { DndContext } from '@dnd-kit/core'
 import { useFomuDnd } from '@/hooks'
+import OverlayItem from '@/components/Item/OverlayItem'
 
 const Home = () => {
   const {
     materials,
     activeMaterial,
+    isDragableItem,
     addMaterial,
     handleDragStart,
     handleDragOver,
@@ -31,21 +31,7 @@ const Home = () => {
           />
         </Box>
       </Box>
-      <DragOverlay
-        dropAnimation={{
-          duration: 200
-        }}
-      >
-        {activeMaterial ? (
-          <Item
-            value={
-              materialNameMap[
-                activeMaterial.type as keyof typeof materialNameMap
-              ]
-            }
-          />
-        ) : null}
-      </DragOverlay>
+      <OverlayItem material={activeMaterial} isDragableItem={isDragableItem} />
     </DndContext>
   )
 }

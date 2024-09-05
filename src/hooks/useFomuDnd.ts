@@ -8,6 +8,7 @@ export default function useFomuDnd() {
   const [activeMaterial, setActiveMaterial] = useState<MaterialItem | null>(
     null
   )
+  const [isDragableItem, setIsDragableItem] = useState(true)
 
   const addMaterial = (material: MaterialItem) => {
     console.log('addMaterial', material)
@@ -64,6 +65,8 @@ export default function useFomuDnd() {
   }, [])
 
   const handleDragStart = ({ active }: DragStartEvent) => {
+    setIsDragableItem((active.id as string).includes('draggable-item'))
+
     const material = active.data.current as MaterialItem
     material.codeId = getCodeId(material)
     setActiveMaterial(material)
@@ -86,6 +89,7 @@ export default function useFomuDnd() {
   return {
     materials,
     activeMaterial,
+    isDragableItem,
     addMaterial,
     handleDragStart,
     handleDragOver,
