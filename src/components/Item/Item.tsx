@@ -36,8 +36,10 @@ const Item = ({ value, dragging, renderItem }: ItemProps) => {
   const renderContent = useCallback(async () => {
     if (renderItem) {
       try {
-        const result = await Promise.resolve(renderItem({ value, dragging }))
-        setRenderedContent(result)
+        const ResultComponent = await Promise.resolve(
+          renderItem({ value, dragging })
+        )
+        setRenderedContent(ResultComponent)
       } catch (error) {
         console.error('render error:', error)
         setRenderedContent(

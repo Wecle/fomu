@@ -1,6 +1,9 @@
 import { useCallback, useState } from 'react'
 import { DragEndEvent, DragStartEvent, DragOverEvent } from '@dnd-kit/core'
-import { MaterialItem } from '@/components/Materials/materials'
+import {
+  MaterialItem,
+  renderMaterialItem
+} from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
 
 export default function useFomuDnd() {
@@ -69,6 +72,14 @@ export default function useFomuDnd() {
     [activeMaterial]
   )
 
+  const updateMaterialComponent = async () => {
+    if (activeMaterial && !activeMaterial.renderComponent) {
+      activeMaterial.renderComponent = await renderMaterialItem(
+        activeMaterial.widgetType
+      )
+    }
+  }
+
   const handleDragStart = ({ active }: DragStartEvent) => {
     console.log('handleDragStart', active)
     const isDragableItem = (active.id as string).includes('draggable-item')
@@ -94,6 +105,7 @@ export default function useFomuDnd() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
+    updateMaterialComponent()
     updateMaterials(event)
     setActiveMaterial(null)
   }

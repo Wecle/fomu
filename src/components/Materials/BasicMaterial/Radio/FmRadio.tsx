@@ -5,9 +5,7 @@ interface FmRadioProps {
   dragging?: boolean
 }
 
-const FmRadio: React.FC<FmRadioProps> = ({
-  value: defaultValue
-}: FmRadioProps) => {
+const FmRadio = ({ value: defaultValue }: FmRadioProps) => {
   return (
     <Box p={2} border="1px" borderRadius="md" borderColor="gray.200">
       <RadioGroup defaultValue={defaultValue}>

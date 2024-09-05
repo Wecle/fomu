@@ -1,7 +1,7 @@
+import React from 'react'
 import { DragOverlay } from '@dnd-kit/core'
-import Item from './Item'
+import Item, { ItemProps } from './Item'
 import { MaterialItem, materialNameMap } from '../Materials/materials'
-import WidgetItem from './WidgetItem'
 
 interface OverlayItemProps {
   material: MaterialItem | null
@@ -9,6 +9,11 @@ interface OverlayItemProps {
 }
 
 const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
+  const renderItem = (props: ItemProps) => {
+    const ResultElement = material?.renderComponent
+    return ResultElement ? <ResultElement {...props} /> : <></>
+  }
+
   return (
     <DragOverlay
       dropAnimation={{
@@ -23,11 +28,11 @@ const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
             }
           />
         ) : (
-          <WidgetItem material={material} dragging={true}></WidgetItem>
+          <Item value={material.defaultValue} renderItem={renderItem} />
         )
       ) : null}
     </DragOverlay>
   )
 }
 
-export default OverlayItem
+export default React.memo(OverlayItem)

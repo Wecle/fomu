@@ -6,6 +6,8 @@ export interface MaterialItem {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any
   widgetType: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  renderComponent?: React.FC<any>
 }
 
 export interface Material {

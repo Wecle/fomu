@@ -6,9 +6,7 @@ interface FmTextareaProps {
   dragging?: boolean
 }
 
-const FmText: React.FC<FmTextareaProps> = ({
-  value: defaultValue
-}: FmTextareaProps) => {
+const FmText = ({ value: defaultValue }: FmTextareaProps) => {
   const [value, setValue] = useState(defaultValue || '')
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
