@@ -36,6 +36,7 @@ export const materialConfig: Material[] = [
         name: materialNameMap.text,
         icon: 'text',
         type: 'text',
+        defaultValue: '',
         widgetType: widgetTypeMap['TEXT_WIDGET']
       },
       {
@@ -43,6 +44,7 @@ export const materialConfig: Material[] = [
         name: materialNameMap.textarea,
         icon: 'textarea',
         type: 'textarea',
+        defaultValue: '',
         widgetType: widgetTypeMap['TEXTAREA_WIDGET']
       },
       {
@@ -50,6 +52,7 @@ export const materialConfig: Material[] = [
         name: materialNameMap.radio,
         icon: 'radio',
         type: 'radio',
+        defaultValue: '',
         widgetType: widgetTypeMap['RADIO_WIDGET']
       }
     ]

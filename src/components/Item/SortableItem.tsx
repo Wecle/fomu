@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { AnyObject } from '@/types/type'
 import { Box } from '@chakra-ui/react'
+import { AnyObject } from '@/types/type'
 import Handle from '../Handle/Handle'
 
 interface SortableItemProps<T> {
@@ -33,19 +33,18 @@ const SortableItem = <T,>({
     transition,
     isDragging
   } = useSortable({ id: idx, data: item as AnyObject })
-  const [isHovered, setIsHovered] = useState(false)
 
   const style = useMemo(() => {
     return {
       transform: CSS.Transform.toString(transform),
       transition,
-      opacity: isDragging || dragging ? 0.5 : 1
+      opacity: dragging || isDragging ? 0.5 : 1
     }
   }, [dragging, isDragging, transform, transition])
 
-  function getChildComponent() {
+  const getChildComponent = () => {
     if (typeof children === 'function') {
-      return children({ isDragging: isDragging || dragging })
+      return children({ isDragging: dragging || isDragging })
     }
     return children
   }
@@ -53,21 +52,29 @@ const SortableItem = <T,>({
   return (
     <Box
       ref={setNodeRef}
-      style={style}
+      {...style}
       {...attributes}
       {...(!handle ? listeners : undefined)}
       position="relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      data-group={true}
+      _hover={handle ? undefined : { opacity: 1 }}
     >
       {getChildComponent()}
-      {handle && isHovered && (
+      {handle && (
         <Box
+          className="handle-container"
           position="absolute"
           top="50%"
           right="1"
           zIndex="9999"
           transform="translateY(-50%)"
+          opacity={0}
+          visibility="hidden"
+          transition="opacity 0.2s, visibility 0.2s"
+          _groupHover={{
+            opacity: 1,
+            visibility: 'visible'
+          }}
         >
           <Handle ref={setActivatorNodeRef} {...listeners} />
         </Box>

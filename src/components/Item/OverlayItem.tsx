@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react'
 import { DragOverlay } from '@dnd-kit/core'
+import { Box } from '@chakra-ui/react'
 import Item from './Item'
 import { MaterialItem, materialNameMap } from '../Materials/materials'
+import Handle from '../Handle/Handle'
 
 interface OverlayItemProps {
   material: MaterialItem | null
@@ -22,7 +24,12 @@ const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
 
     const ResultElement = material?.renderComponent
     return ResultElement ? (
-      <ResultElement value={material.defaultValue} />
+      <Box className="relative" cursor="grab">
+        <ResultElement value={material.defaultValue} />
+        <Box className="absolute right-1 top-1/2 z-50 -translate-y-2/4">
+          <Handle />
+        </Box>
+      </Box>
     ) : (
       <DefaultItem />
     )
