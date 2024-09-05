@@ -7,8 +7,8 @@ interface WidgetItemProps {
 }
 
 const WidgetItem = ({ material, dragging }: WidgetItemProps) => {
-  const renderItem = async (widget: MaterialItem, props: ItemProps) => {
-    const Component = await renderMaterialItem(widget.widgetType)
+  const renderItem = async (props: ItemProps) => {
+    const Component = await renderMaterialItem(material.widgetType)
     return <Component {...props} />
   }
 
@@ -16,7 +16,7 @@ const WidgetItem = ({ material, dragging }: WidgetItemProps) => {
     <Item
       value={material.defaultValue}
       dragging={dragging}
-      renderItem={(props) => renderItem(material, props)}
+      renderItem={renderItem}
     />
   )
 }

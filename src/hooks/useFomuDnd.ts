@@ -106,8 +106,10 @@ export default function useFomuDnd() {
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
     updateMaterialComponent()
-    updateMaterials(event)
-    setActiveMaterial(null)
+    setTimeout(() => {
+      updateMaterials(event)
+      setActiveMaterial(null)
+    }, 100)
   }
 
   return {

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { DragOverlay } from '@dnd-kit/core'
-import Item, { ItemProps } from './Item'
+import Item from './Item'
 import { MaterialItem, materialNameMap } from '../Materials/materials'
 
 interface OverlayItemProps {
@@ -9,10 +9,29 @@ interface OverlayItemProps {
 }
 
 const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
-  const renderItem = (props: ItemProps) => {
+  const DefaultItem = useCallback(() => {
+    return (
+      <Item
+        value={materialNameMap[material?.type as keyof typeof materialNameMap]}
+      />
+    )
+  }, [material?.type])
+
+  const RenderItem = useCallback(() => {
+    if (isDragableItem) return <DefaultItem />
+
     const ResultElement = material?.renderComponent
-    return ResultElement ? <ResultElement {...props} /> : <></>
-  }
+    return ResultElement ? (
+      <ResultElement value={material.defaultValue} />
+    ) : (
+      <DefaultItem />
+    )
+  }, [
+    DefaultItem,
+    isDragableItem,
+    material?.defaultValue,
+    material?.renderComponent
+  ])
 
   return (
     <DragOverlay
@@ -20,17 +39,7 @@ const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
         duration: 200
       }}
     >
-      {material ? (
-        isDragableItem ? (
-          <Item
-            value={
-              materialNameMap[material.type as keyof typeof materialNameMap]
-            }
-          />
-        ) : (
-          <Item value={material.defaultValue} renderItem={renderItem} />
-        )
-      ) : null}
+      {material ? <RenderItem /> : null}
     </DragOverlay>
   )
 }

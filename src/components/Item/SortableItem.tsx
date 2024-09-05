@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -35,11 +35,13 @@ const SortableItem = <T,>({
   } = useSortable({ id: idx, data: item as AnyObject })
   const [isHovered, setIsHovered] = useState(false)
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging || dragging ? 0.5 : 1
-  }
+  const style = useMemo(() => {
+    return {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging || dragging ? 0.5 : 1
+    }
+  }, [dragging, isDragging, transform, transition])
 
   function getChildComponent() {
     if (typeof children === 'function') {
