@@ -44,31 +44,43 @@ export default function useFomuDnd() {
     ]
   }
 
-  const updateMaterials = useCallback(({ active, over }: DragOverEvent) => {
-    setMaterials((prevMaterials) => {
-      const activeCodeId = active.data.current?.codeId as string
-      const overCodeId = over?.id
+  const updateMaterials = useCallback(
+    ({ over }: DragOverEvent) => {
+      setMaterials((prevMaterials) => {
+        const activeCodeId = activeMaterial?.codeId as string
+        const overCodeId = over?.id
 
-      const oldIndex = prevMaterials.findIndex((m) => m.codeId === activeCodeId)
-      const newIndex = prevMaterials.findIndex((m) => m.codeId === overCodeId)
+        const oldIndex = prevMaterials.findIndex(
+          (m) => m.codeId === activeCodeId
+        )
+        const newIndex = prevMaterials.findIndex((m) => m.codeId === overCodeId)
 
-      const isExistingMaterial = oldIndex !== -1
+        const isExistingMaterial = oldIndex !== -1
 
-      return isExistingMaterial
-        ? reorderExistingMaterial(prevMaterials, oldIndex, newIndex)
-        : insertNewMaterial(
-            prevMaterials,
-            JSON.parse(JSON.stringify(active.data.current)),
-            newIndex
-          )
-    })
-  }, [])
+        return isExistingMaterial
+          ? reorderExistingMaterial(prevMaterials, oldIndex, newIndex)
+          : insertNewMaterial(
+              prevMaterials,
+              activeMaterial as MaterialItem,
+              newIndex
+            )
+      })
+    },
+    [activeMaterial]
+  )
 
   const handleDragStart = ({ active }: DragStartEvent) => {
-    setIsDragableItem((active.id as string).includes('draggable-item'))
+    console.log('handleDragStart', active)
+    const isDragableItem = (active.id as string).includes('draggable-item')
+    setIsDragableItem(isDragableItem)
 
     const material = active.data.current as MaterialItem
-    material.codeId = getCodeId(material)
+    if (isDragableItem) {
+      const cloneMaterial = JSON.parse(JSON.stringify(material))
+      cloneMaterial.codeId = getCodeId(cloneMaterial)
+
+      return setActiveMaterial(cloneMaterial)
+    }
     setActiveMaterial(material)
   }
 
