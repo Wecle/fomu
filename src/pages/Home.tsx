@@ -8,9 +8,9 @@ import { useFomuDnd } from '@/hooks'
 
 const Home = () => {
   const {
-    widgets,
-    activeWidget,
-    addWidget,
+    materials,
+    activeMaterial,
+    addMaterial,
     handleDragStart,
     handleDragOver,
     handleDragEnd
@@ -23,9 +23,12 @@ const Home = () => {
       onDragEnd={handleDragEnd}
     >
       <Box display="flex" h="100vh" w="100vw">
-        <MaterialBar addMaterialItem={addWidget} />
+        <MaterialBar addMaterialItem={addMaterial} />
         <Box flex="1" p="4" bg="purple.300">
-          <FormContainer widgets={widgets} activeWidget={activeWidget} />
+          <FormContainer
+            materials={materials}
+            activeMaterial={activeMaterial}
+          />
         </Box>
       </Box>
       <DragOverlay
@@ -33,10 +36,12 @@ const Home = () => {
           duration: 200
         }}
       >
-        {activeWidget ? (
+        {activeMaterial ? (
           <Item
             value={
-              materialNameMap[activeWidget.type as keyof typeof materialNameMap]
+              materialNameMap[
+                activeMaterial.type as keyof typeof materialNameMap
+              ]
             }
           />
         ) : null}

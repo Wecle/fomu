@@ -1,19 +1,15 @@
 import { Box, VStack } from '@chakra-ui/react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import {
-  MaterialItem,
-  materialNameMap,
-  renderMaterialItem
-} from '../Materials/materials'
+import { MaterialItem, renderMaterialItem } from '../Materials/materials'
 import SortableItem from '../Item/SortableItem'
 import Item, { ItemProps } from '../Item/Item'
 
 interface FormContainerProps {
-  widgets: MaterialItem[]
-  activeWidget: MaterialItem | null
+  materials: MaterialItem[]
+  activeMaterial: MaterialItem | null
 }
 
-const FormContainer = ({ widgets, activeWidget }: FormContainerProps) => {
+const FormContainer = ({ materials, activeMaterial }: FormContainerProps) => {
   const renderItem = async (widget: MaterialItem, props: ItemProps) => {
     const Component = await renderMaterialItem(widget.widgetType)
     return <Component {...props} />
@@ -22,27 +18,25 @@ const FormContainer = ({ widgets, activeWidget }: FormContainerProps) => {
   return (
     <Box w="100%" h="100%" margin="auto" p="2" bg="white" borderRadius="md">
       <SortableContext
-        items={widgets.map((w) => w.codeId)}
+        items={materials.map((m) => m.codeId)}
         strategy={verticalListSortingStrategy}
       >
         <VStack spacing="4px" align="stretch">
-          {widgets.map((widget) => (
+          {materials.map((material) => (
             <SortableItem<MaterialItem>
-              key={widget.codeId}
-              idx={widget.codeId}
-              item={widget}
+              key={material.codeId}
+              idx={material.codeId}
+              item={material}
               handle={true}
-              dragging={widget.codeId === activeWidget?.codeId}
+              dragging={material.codeId === activeMaterial?.codeId}
             >
               {({ isDragging }) => (
                 <Item
-                  value={
-                    materialNameMap[widget.type as keyof typeof materialNameMap]
-                  }
+                  value={material.defaultValue}
                   dragging={
-                    isDragging || widget.codeId === activeWidget?.codeId
+                    isDragging || material.codeId === activeMaterial?.codeId
                   }
-                  renderItem={(props) => renderItem(widget, props)}
+                  renderItem={(props) => renderItem(material, props)}
                 ></Item>
               )}
             </SortableItem>

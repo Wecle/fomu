@@ -4,57 +4,59 @@ import { MaterialItem } from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
 
 export default function useFomuDnd() {
-  const [widgets, setWidgets] = useState<MaterialItem[]>([])
-  const [activeWidget, setActiveWidget] = useState<MaterialItem | null>(null)
+  const [materials, setMaterials] = useState<MaterialItem[]>([])
+  const [activeMaterial, setActiveMaterial] = useState<MaterialItem | null>(
+    null
+  )
 
-  const addWidget = (widget: MaterialItem) => {
-    console.log('addWidget', widget)
+  const addMaterial = (material: MaterialItem) => {
+    console.log('addMaterial', material)
   }
 
   const getCodeId = useCallback(
     ({ widgetType, type }: MaterialItem) => {
-      const currentWidgetCount = widgets.filter(
-        (w) => w.widgetType === widgetType
+      const currentMaterialCount = materials.filter(
+        (m) => m.widgetType === widgetType
       ).length
-      return `${type}_${currentWidgetCount}`
+      return `${type}_${currentMaterialCount}`
     },
-    [widgets]
+    [materials]
   )
 
-  const reorderExistingWidget = (
-    widgets: MaterialItem[],
+  const reorderExistingMaterial = (
+    materials: MaterialItem[],
     oldIndex: number,
     newIndex: number
   ) => {
-    return arrayMove(widgets, oldIndex, newIndex)
+    return arrayMove(materials, oldIndex, newIndex)
   }
 
-  const insertNewWidget = (
-    widgets: MaterialItem[],
-    newWidgetData: MaterialItem,
+  const insertNewMaterial = (
+    materials: MaterialItem[],
+    newMaterialData: MaterialItem,
     insertIndex: number
   ) => {
     return [
-      ...widgets.slice(0, insertIndex),
-      newWidgetData,
-      ...widgets.slice(insertIndex)
+      ...materials.slice(0, insertIndex),
+      newMaterialData,
+      ...materials.slice(insertIndex)
     ]
   }
 
-  const updateWidgets = useCallback(({ active, over }: DragOverEvent) => {
-    setWidgets((prevWidgets) => {
+  const updateMaterials = useCallback(({ active, over }: DragOverEvent) => {
+    setMaterials((prevMaterials) => {
       const activeCodeId = active.data.current?.codeId as string
       const overCodeId = over?.id
 
-      const oldIndex = prevWidgets.findIndex((w) => w.codeId === activeCodeId)
-      const newIndex = prevWidgets.findIndex((w) => w.codeId === overCodeId)
+      const oldIndex = prevMaterials.findIndex((m) => m.codeId === activeCodeId)
+      const newIndex = prevMaterials.findIndex((m) => m.codeId === overCodeId)
 
-      const isExistingWidget = oldIndex !== -1
+      const isExistingMaterial = oldIndex !== -1
 
-      return isExistingWidget
-        ? reorderExistingWidget(prevWidgets, oldIndex, newIndex)
-        : insertNewWidget(
-            prevWidgets,
+      return isExistingMaterial
+        ? reorderExistingMaterial(prevMaterials, oldIndex, newIndex)
+        : insertNewMaterial(
+            prevMaterials,
             JSON.parse(JSON.stringify(active.data.current)),
             newIndex
           )
@@ -64,27 +66,27 @@ export default function useFomuDnd() {
   const handleDragStart = ({ active }: DragStartEvent) => {
     const material = active.data.current as MaterialItem
     material.codeId = getCodeId(material)
-    setActiveWidget(material)
+    setActiveMaterial(material)
   }
 
   const handleDragOver = useCallback(
     (event: DragOverEvent) => {
       console.log('handleDragOver', event)
-      updateWidgets(event)
+      updateMaterials(event)
     },
-    [updateWidgets]
+    [updateMaterials]
   )
 
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
-    updateWidgets(event)
-    setActiveWidget(null)
+    updateMaterials(event)
+    setActiveMaterial(null)
   }
 
   return {
-    widgets,
-    activeWidget,
-    addWidget,
+    materials,
+    activeMaterial,
+    addMaterial,
     handleDragStart,
     handleDragOver,
     handleDragEnd
