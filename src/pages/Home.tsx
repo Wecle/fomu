@@ -31,7 +31,7 @@ const Home = () => {
           />
         </Box>
       </Box>
-      <OverlayItem material={activeMaterial} isDragableItem={isDragableItem} />
+      <OverlayItem material={activeMaterial} dragOverlay={isDragableItem} />
     </DndContext>
   )
 }

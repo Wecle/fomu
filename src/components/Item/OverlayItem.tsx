@@ -7,10 +7,15 @@ import Handle from '../Handle/Handle'
 
 interface OverlayItemProps {
   material: MaterialItem | null
-  isDragableItem: boolean
+  isDragableItem?: boolean
+  dragOverlay?: boolean
 }
 
-const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
+const OverlayItem = ({
+  material,
+  isDragableItem = true,
+  dragOverlay = true
+}: OverlayItemProps) => {
   const DefaultItem = useCallback(() => {
     return (
       <Item
@@ -40,7 +45,7 @@ const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
     material?.renderComponent
   ])
 
-  return (
+  return dragOverlay ? (
     <DragOverlay
       dropAnimation={{
         duration: 200
@@ -48,7 +53,7 @@ const OverlayItem = ({ material, isDragableItem }: OverlayItemProps) => {
     >
       {material ? <RenderItem /> : null}
     </DragOverlay>
-  )
+  ) : null
 }
 
 export default React.memo(OverlayItem)

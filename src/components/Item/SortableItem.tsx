@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 import { Box } from '@chakra-ui/react'
 import { AnyObject } from '@/types/type'
 import Handle from '../Handle/Handle'
@@ -11,6 +10,7 @@ interface SortableItemProps<T> {
   item: T
   dragging: boolean
   handle?: boolean
+  wrapperStyle?: React.CSSProperties
 }
 
 const SortableItem = <T,>({
@@ -18,6 +18,7 @@ const SortableItem = <T,>({
   item,
   dragging,
   handle,
+  wrapperStyle,
   children
 }: SortableItemProps<T> & {
   children:
@@ -36,11 +37,15 @@ const SortableItem = <T,>({
 
   const style = useMemo(() => {
     return {
-      transform: CSS.Transform.toString(transform),
-      transition,
-      opacity: dragging || isDragging ? 0.5 : 1
+      opacity: dragging || isDragging ? 0.5 : 1,
+      transition: [transition, wrapperStyle?.transition]
+        .filter(Boolean)
+        .join(', '),
+      transform: transform
+        ? `translate3d(${transform.x}px, ${transform.y}px, 0) scale(${transform.scaleX}, 1)`
+        : undefined
     }
-  }, [dragging, isDragging, transform, transition])
+  }, [dragging, isDragging, transform, transition, wrapperStyle?.transition])
 
   const getChildComponent = () => {
     if (typeof children === 'function') {
@@ -52,12 +57,16 @@ const SortableItem = <T,>({
   return (
     <Box
       ref={setNodeRef}
-      {...style}
       {...attributes}
       {...(!handle ? listeners : undefined)}
-      position="relative"
       data-group={true}
+      position="relative"
+      bg="white"
       _hover={handle ? undefined : { opacity: 1 }}
+      style={{
+        ...wrapperStyle,
+        ...style
+      }}
     >
       {getChildComponent()}
       {handle && (

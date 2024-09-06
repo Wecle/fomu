@@ -1,3 +1,7 @@
+export interface MaterialItemConfig {
+  wrapperStyle?: React.CSSProperties
+}
+
 export interface MaterialItem {
   codeId: string
   name: string
@@ -8,6 +12,7 @@ export interface MaterialItem {
   widgetType: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderComponent?: React.FC<any>
+  __config__?: MaterialItemConfig
 }
 
 export interface Material {
@@ -37,7 +42,12 @@ export const materialConfig: Material[] = [
         icon: 'text',
         type: 'text',
         defaultValue: '',
-        widgetType: widgetTypeMap['TEXT_WIDGET']
+        widgetType: widgetTypeMap['TEXT_WIDGET'],
+        __config__: {
+          wrapperStyle: {
+            height: '40px'
+          }
+        }
       },
       {
         codeId: '',
@@ -45,7 +55,12 @@ export const materialConfig: Material[] = [
         icon: 'textarea',
         type: 'textarea',
         defaultValue: '',
-        widgetType: widgetTypeMap['TEXTAREA_WIDGET']
+        widgetType: widgetTypeMap['TEXTAREA_WIDGET'],
+        __config__: {
+          wrapperStyle: {
+            minHeight: '80px'
+          }
+        }
       },
       {
         codeId: '',
@@ -53,7 +68,12 @@ export const materialConfig: Material[] = [
         icon: 'radio',
         type: 'radio',
         defaultValue: '',
-        widgetType: widgetTypeMap['RADIO_WIDGET']
+        widgetType: widgetTypeMap['RADIO_WIDGET'],
+        __config__: {
+          wrapperStyle: {
+            height: '42px'
+          }
+        }
       }
     ]
   }
