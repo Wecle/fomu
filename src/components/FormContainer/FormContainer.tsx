@@ -7,10 +7,15 @@ import useMaterialItemConfig from '@/hooks/useMaterialItemConfig'
 
 interface FormContainerProps {
   materials: MaterialItem[]
+  dragOverlay: boolean
   activeMaterial: MaterialItem | null
 }
 
-const FormContainer = ({ materials, activeMaterial }: FormContainerProps) => {
+const FormContainer = ({
+  materials,
+  dragOverlay,
+  activeMaterial
+}: FormContainerProps) => {
   return (
     <Box w="100%" h="100%" margin="auto" p="2" bg="white" borderRadius="md">
       <SortableContext
@@ -24,6 +29,7 @@ const FormContainer = ({ materials, activeMaterial }: FormContainerProps) => {
               idx={material.codeId}
               item={material}
               handle={true}
+              dragOverlay={dragOverlay}
               dragging={material.codeId === activeMaterial?.codeId}
               useHook={useMaterialItemConfig}
               renderItem={({ isDragging }) => (

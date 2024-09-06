@@ -27,6 +27,7 @@ const Home = () => {
         <Box flex="1" p="4" bg="purple.300">
           <FormContainer
             materials={materials}
+            dragOverlay={isDragableItem}
             activeMaterial={activeMaterial}
           />
         </Box>

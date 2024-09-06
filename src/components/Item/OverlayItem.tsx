@@ -20,6 +20,7 @@ const OverlayItem = ({
     return (
       <Item
         value={materialNameMap[material?.type as keyof typeof materialNameMap]}
+        dragging={true}
       />
     )
   }, [material?.type])
@@ -29,7 +30,7 @@ const OverlayItem = ({
 
     const ResultElement = material?.renderComponent
     return ResultElement ? (
-      <Box className="relative" cursor="grab">
+      <Box className="relative" cursor="grabbing">
         <ResultElement value={material.defaultValue} />
         <Box className="absolute right-1 top-1/2 z-50 -translate-y-2/4">
           <Handle />

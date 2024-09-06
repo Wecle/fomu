@@ -10,7 +10,6 @@ const Handle = forwardRef<HTMLButtonElement>((props, ref) => {
       aria-label="拖拽"
       size="sm"
       bg="none"
-      cursor="grab"
       _hover={{ bg: 'purple.200' }}
       {...props}
     />

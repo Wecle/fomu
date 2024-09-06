@@ -4,8 +4,9 @@ import SortableItem from './SortableItem'
 interface SortableAdvancedItemProps<T> {
   idx: UniqueIdentifier
   item: T
-  dragging: boolean
   handle?: boolean
+  dragging?: boolean
+  dragOverlay?: boolean
   useHook?: (item: T) => unknown
   renderItem: (props: {
     isDragging: boolean
@@ -16,8 +17,9 @@ interface SortableAdvancedItemProps<T> {
 const SortableAdvancedItem = <T,>({
   idx,
   item,
-  dragging,
   handle,
+  dragging,
+  dragOverlay,
   useHook,
   renderItem
 }: SortableAdvancedItemProps<T>) => {
@@ -30,6 +32,7 @@ const SortableAdvancedItem = <T,>({
       item={item}
       handle={handle}
       dragging={dragging}
+      dragOverlay={dragOverlay}
       wrapperStyle={advancedConfig?.wrapperStyle || {}}
     >
       {({ isDragging }) => renderItem({ isDragging, advancedConfig })}

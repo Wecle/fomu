@@ -8,16 +8,18 @@ import Handle from '../Handle/Handle'
 interface SortableItemProps<T> {
   idx: UniqueIdentifier
   item: T
-  dragging: boolean
   handle?: boolean
+  dragging?: boolean
+  dragOverlay?: boolean
   wrapperStyle?: React.CSSProperties
 }
 
 const SortableItem = <T,>({
   idx,
   item,
-  dragging,
   handle,
+  dragging,
+  dragOverlay,
   wrapperStyle,
   children
 }: SortableItemProps<T> & {
@@ -37,7 +39,8 @@ const SortableItem = <T,>({
 
   const style = useMemo(() => {
     return {
-      opacity: dragging || isDragging ? 0.5 : 1,
+      zIndex: !dragOverlay && (dragging || isDragging) ? 1000 : undefined,
+      opacity: dragOverlay && (dragging || isDragging) ? 0.5 : 1,
       transition: [transition, wrapperStyle?.transition]
         .filter(Boolean)
         .join(', '),
@@ -45,7 +48,14 @@ const SortableItem = <T,>({
         ? `translate3d(${transform.x}px, ${transform.y}px, 0) scale(${transform.scaleX}, 1)`
         : undefined
     }
-  }, [dragging, isDragging, transform, transition, wrapperStyle?.transition])
+  }, [
+    dragOverlay,
+    dragging,
+    isDragging,
+    transform,
+    transition,
+    wrapperStyle?.transition
+  ])
 
   const getChildComponent = () => {
     if (typeof children === 'function') {
@@ -59,7 +69,7 @@ const SortableItem = <T,>({
       ref={setNodeRef}
       {...attributes}
       {...(!handle ? listeners : undefined)}
-      data-group={true}
+      data-group={handle && dragging ? true : false}
       position="relative"
       bg="white"
       _hover={handle ? undefined : { opacity: 1 }}
@@ -71,7 +81,6 @@ const SortableItem = <T,>({
       {getChildComponent()}
       {handle && (
         <Box
-          className="handle-container"
           position="absolute"
           top="50%"
           right="1"
@@ -85,7 +94,13 @@ const SortableItem = <T,>({
             visibility: 'visible'
           }}
         >
-          <Handle ref={setActivatorNodeRef} {...listeners} />
+          <Handle
+            ref={setActivatorNodeRef}
+            {...listeners}
+            {...{
+              cursor: dragging || isDragging ? 'grabbing' : 'grab'
+            }}
+          />
         </Box>
       )}
     </Box>
