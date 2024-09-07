@@ -108,8 +108,19 @@ export default function useFomuDnd(options?: FomuDndOptins) {
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
     useDragOverlayRef.current = false
-    updateMaterialComponent()
-    updateMaterials(event)
+
+    const { over } = event
+    if (over && over.id === 'delete-footer') {
+      console.log('delete-zone', activeMaterial)
+      setMaterials((prevMaterials) =>
+        prevMaterials.filter(
+          (material) => material.codeId !== activeMaterial?.codeId
+        )
+      )
+    } else {
+      updateMaterialComponent()
+      updateMaterials(event)
+    }
     setActiveMaterial(null)
   }
 
