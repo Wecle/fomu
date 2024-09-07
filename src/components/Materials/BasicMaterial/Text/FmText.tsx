@@ -12,7 +12,9 @@ const FmText = ({ value: defaultValue }: FmTextareaProps) => {
     setValue(e.target.value)
   }
 
-  return <Input value={value} onChange={handleInputChange}></Input>
+  return (
+    <Input value={value} border="none" onChange={handleInputChange}></Input>
+  )
 }
 
 export default FmText

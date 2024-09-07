@@ -7,13 +7,13 @@ import useMaterialItemConfig from '@/hooks/useMaterialItemConfig'
 
 interface FormContainerProps {
   materials: MaterialItem[]
-  dragOverlay: boolean
+  useWidgetDragOverlay: boolean
   activeMaterial: MaterialItem | null
 }
 
 const FormContainer = ({
   materials,
-  dragOverlay,
+  useWidgetDragOverlay,
   activeMaterial
 }: FormContainerProps) => {
   return (
@@ -29,9 +29,22 @@ const FormContainer = ({
               idx={material.codeId}
               item={material}
               handle={true}
-              dragOverlay={dragOverlay}
+              dragOverlay={useWidgetDragOverlay}
               dragging={material.codeId === activeMaterial?.codeId}
               useHook={useMaterialItemConfig}
+              wrapperClassName={{
+                border: '1px',
+                borderStyle:
+                  material.codeId === activeMaterial?.codeId &&
+                  useWidgetDragOverlay
+                    ? 'dashed'
+                    : 'solid',
+                borderColor:
+                  material.codeId === activeMaterial?.codeId &&
+                  useWidgetDragOverlay
+                    ? 'purple.500'
+                    : 'gray.300'
+              }}
               renderItem={({ isDragging }) => (
                 <WidgetItem
                   material={material}

@@ -44,9 +44,7 @@ export const materialConfig: Material[] = [
         defaultValue: '',
         widgetType: widgetTypeMap['TEXT_WIDGET'],
         __config__: {
-          wrapperStyle: {
-            height: '40px'
-          }
+          wrapperStyle: {}
         }
       },
       {
@@ -57,9 +55,7 @@ export const materialConfig: Material[] = [
         defaultValue: '',
         widgetType: widgetTypeMap['TEXTAREA_WIDGET'],
         __config__: {
-          wrapperStyle: {
-            minHeight: '80px'
-          }
+          wrapperStyle: {}
         }
       },
       {
@@ -70,9 +66,7 @@ export const materialConfig: Material[] = [
         defaultValue: '',
         widgetType: widgetTypeMap['RADIO_WIDGET'],
         __config__: {
-          wrapperStyle: {
-            height: '42px'
-          }
+          wrapperStyle: {}
         }
       }
     ]

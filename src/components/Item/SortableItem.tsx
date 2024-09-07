@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react'
 import { UniqueIdentifier } from '@dnd-kit/core'
 import { useSortable } from '@dnd-kit/sortable'
-import { Box } from '@chakra-ui/react'
+import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { AnyObject } from '@/types/type'
 import Handle from '../Handle/Handle'
 
-interface SortableItemProps<T> {
+export interface SortableItemProps<T> {
   idx: UniqueIdentifier
   item: T
   handle?: boolean
   dragging?: boolean
   dragOverlay?: boolean
   wrapperStyle?: React.CSSProperties
+  wrapperClassName?: HTMLChakraProps<'div'>
 }
 
 const SortableItem = <T,>({
@@ -21,6 +22,7 @@ const SortableItem = <T,>({
   dragging,
   dragOverlay,
   wrapperStyle,
+  wrapperClassName,
   children
 }: SortableItemProps<T> & {
   children:
@@ -71,8 +73,10 @@ const SortableItem = <T,>({
       {...(!handle ? listeners : undefined)}
       data-group={handle && dragging ? true : false}
       position="relative"
+      borderRadius="md"
       bg="white"
       _hover={handle ? undefined : { opacity: 1 }}
+      {...wrapperClassName}
       style={{
         ...wrapperStyle,
         ...style

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useRef } from 'react'
 import { DragEndEvent, DragStartEvent, DragOverEvent } from '@dnd-kit/core'
 import {
   MaterialItem,
@@ -6,12 +6,16 @@ import {
 } from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
 
-export default function useFomuDnd() {
+interface FomuDndOptins {
+  useWidgetDragOverlay?: boolean
+}
+
+export default function useFomuDnd(options?: FomuDndOptins) {
   const [materials, setMaterials] = useState<MaterialItem[]>([])
   const [activeMaterial, setActiveMaterial] = useState<MaterialItem | null>(
     null
   )
-  const [isDragableItem, setIsDragableItem] = useState(true)
+  const useDragOverlayRef = useRef(false)
 
   const addMaterial = (material: MaterialItem) => {
     console.log('addMaterial', material)
@@ -40,11 +44,8 @@ export default function useFomuDnd() {
     newMaterialData: MaterialItem,
     insertIndex: number
   ) => {
-    return [
-      ...materials.slice(0, insertIndex),
-      newMaterialData,
-      ...materials.slice(insertIndex)
-    ]
+    const newMaterials = [...materials, newMaterialData]
+    return arrayMove(newMaterials, newMaterials.length - 1, insertIndex)
   }
 
   const updateMaterials = useCallback(
@@ -82,11 +83,12 @@ export default function useFomuDnd() {
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     console.log('handleDragStart', active)
-    const isDragableItem = (active.id as string).includes('draggable-item')
-    setIsDragableItem(isDragableItem)
-
     const material = active.data.current as MaterialItem
-    if (isDragableItem) {
+
+    useDragOverlayRef.current =
+      options?.useWidgetDragOverlay || !material.codeId
+
+    if (!material.codeId) {
       const cloneMaterial = JSON.parse(JSON.stringify(material))
       cloneMaterial.codeId = getCodeId(cloneMaterial)
 
@@ -95,27 +97,26 @@ export default function useFomuDnd() {
     setActiveMaterial(material)
   }
 
-  const handleDragOver = useCallback(
-    (event: DragOverEvent) => {
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
+    if (useDragOverlayRef.current && active.id !== over?.id) {
       console.log('handleDragOver', event)
       updateMaterials(event)
-    },
-    [updateMaterials]
-  )
+    }
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
+    useDragOverlayRef.current = false
     updateMaterialComponent()
-    setTimeout(() => {
-      updateMaterials(event)
-      setActiveMaterial(null)
-    }, 100)
+    updateMaterials(event)
+    setActiveMaterial(null)
   }
 
   return {
     materials,
     activeMaterial,
-    isDragableItem,
+    useWidgetDragOverlay: useDragOverlayRef.current,
     addMaterial,
     handleDragStart,
     handleDragOver,

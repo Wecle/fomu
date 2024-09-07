@@ -1,12 +1,6 @@
-import { UniqueIdentifier } from '@dnd-kit/core'
-import SortableItem from './SortableItem'
+import SortableItem, { SortableItemProps } from './SortableItem'
 
-interface SortableAdvancedItemProps<T> {
-  idx: UniqueIdentifier
-  item: T
-  handle?: boolean
-  dragging?: boolean
-  dragOverlay?: boolean
+type SortableAdvancedItemProps<T> = SortableItemProps<T> & {
   useHook?: (item: T) => unknown
   renderItem: (props: {
     isDragging: boolean
@@ -20,6 +14,8 @@ const SortableAdvancedItem = <T,>({
   handle,
   dragging,
   dragOverlay,
+  wrapperStyle,
+  wrapperClassName,
   useHook,
   renderItem
 }: SortableAdvancedItemProps<T>) => {
@@ -33,7 +29,11 @@ const SortableAdvancedItem = <T,>({
       handle={handle}
       dragging={dragging}
       dragOverlay={dragOverlay}
-      wrapperStyle={advancedConfig?.wrapperStyle || {}}
+      wrapperClassName={wrapperClassName}
+      wrapperStyle={{
+        ...wrapperStyle,
+        ...(advancedConfig?.wrapperStyle || {})
+      }}
     >
       {({ isDragging }) => renderItem({ isDragging, advancedConfig })}
     </SortableItem>

@@ -7,7 +7,7 @@ interface FmRadioProps {
 
 const FmRadio = ({ value: defaultValue }: FmRadioProps) => {
   return (
-    <Box p={2} border="1px" borderRadius="md" borderColor="gray.200">
+    <Box p={2} borderRadius="md">
       <RadioGroup defaultValue={defaultValue}>
         <Stack direction="row">
           <Radio value="1">First</Radio>

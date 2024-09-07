@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { SpinnerIcon, WarningTwoIcon } from '@chakra-ui/icons'
 
 interface ItemParams {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any
   dragging?: boolean
+  wrapperClassName?: HTMLChakraProps<'div'>
 }
 
 export type ItemProps = ItemParams & {
@@ -14,7 +15,7 @@ export type ItemProps = ItemParams & {
   ): React.ReactElement | Promise<React.ReactElement>
 }
 
-const DefaultItem = ({ value, dragging }: ItemParams) => {
+const DefaultItem = ({ value, dragging, wrapperClassName }: ItemParams) => {
   return (
     <Box
       p="2"
@@ -23,13 +24,14 @@ const DefaultItem = ({ value, dragging }: ItemParams) => {
       borderWidth="1px"
       borderRadius="md"
       cursor={dragging ? 'grabbing' : 'grab'}
+      {...wrapperClassName}
     >
       {value}
     </Box>
   )
 }
 
-const Item = ({ value, dragging, renderItem }: ItemProps) => {
+const Item = ({ value, dragging, wrapperClassName, renderItem }: ItemProps) => {
   const [renderedContent, setRenderedContent] =
     useState<React.ReactElement | null>(null)
 
@@ -61,7 +63,15 @@ const Item = ({ value, dragging, renderItem }: ItemProps) => {
     )
   }
 
-  return renderedContent || <DefaultItem value={value} dragging={dragging} />
+  return (
+    renderedContent || (
+      <DefaultItem
+        value={value}
+        dragging={dragging}
+        wrapperClassName={wrapperClassName}
+      />
+    )
+  )
 }
 
 export default Item

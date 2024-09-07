@@ -9,7 +9,7 @@ const Home = () => {
   const {
     materials,
     activeMaterial,
-    isDragableItem,
+    useWidgetDragOverlay,
     addMaterial,
     handleDragStart,
     handleDragOver,
@@ -27,12 +27,15 @@ const Home = () => {
         <Box flex="1" p="4" bg="purple.300">
           <FormContainer
             materials={materials}
-            dragOverlay={isDragableItem}
+            useWidgetDragOverlay={useWidgetDragOverlay}
             activeMaterial={activeMaterial}
           />
         </Box>
       </Box>
-      <OverlayItem material={activeMaterial} dragOverlay={isDragableItem} />
+      <OverlayItem
+        material={activeMaterial}
+        dragOverlay={useWidgetDragOverlay}
+      />
     </DndContext>
   )
 }
