@@ -11,10 +11,12 @@ const Home = () => {
     materials,
     activeMaterial,
     useWidgetDragOverlay,
+    isMaterialDragging,
     addMaterial,
     handleDragStart,
     handleDragOver,
-    handleDragEnd
+    handleDragEnd,
+    collisionDetectionAlgorithm
   } = useFomuDnd()
 
   return (
@@ -22,10 +24,15 @@ const Home = () => {
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      collisionDetection={collisionDetectionAlgorithm}
       modifiers={[restrictToWindowEdges]}
     >
       <Box display="flex" h="100vh" w="100vw">
-        <MaterialBar addMaterialItem={addMaterial} />
+        <MaterialBar
+          activeMaterial={activeMaterial}
+          dragging={isMaterialDragging}
+          addMaterialItem={addMaterial}
+        />
         <Box flex="1" p="4" bg="purple.300">
           <FormContainer
             materials={materials}

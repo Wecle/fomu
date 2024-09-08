@@ -1,5 +1,13 @@
 import { useCallback, useState, useRef } from 'react'
-import { DragEndEvent, DragStartEvent, DragOverEvent } from '@dnd-kit/core'
+import {
+  DragEndEvent,
+  DragStartEvent,
+  DragOverEvent,
+  CollisionDetection,
+  DroppableContainer,
+  closestCorners,
+  pointerWithin
+} from '@dnd-kit/core'
 import {
   MaterialItem,
   renderMaterialItem
@@ -16,6 +24,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     null
   )
   const useDragOverlayRef = useRef(false)
+  const isMaterialDraggingRef = useRef(false)
 
   const addMaterial = (material: MaterialItem) => {
     console.log('addMaterial', material)
@@ -50,6 +59,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
   const updateMaterials = useCallback(
     ({ over }: DragOverEvent) => {
+      console.log('updateMaterials')
       setMaterials((prevMaterials) => {
         const activeCodeId = activeMaterial?.codeId as string
         const overCodeId = over?.id
@@ -87,6 +97,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
     useDragOverlayRef.current =
       options?.useWidgetDragOverlay || !material.codeId
+    isMaterialDraggingRef.current = !material.codeId
 
     if (!material.codeId) {
       const cloneMaterial = JSON.parse(JSON.stringify(material))
@@ -99,8 +110,13 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event
-    if (useDragOverlayRef.current && active.id !== over?.id) {
-      console.log('handleDragOver', event)
+    console.log('handleDragOver', event)
+    if (
+      useDragOverlayRef.current &&
+      over &&
+      active.id !== over?.id &&
+      over?.id !== 'trash'
+    ) {
       updateMaterials(event)
     }
   }
@@ -108,9 +124,10 @@ export default function useFomuDnd(options?: FomuDndOptins) {
   const handleDragEnd = (event: DragEndEvent) => {
     console.log('handleDragEnd', event)
     useDragOverlayRef.current = false
+    isMaterialDraggingRef.current = false
 
     const { over } = event
-    if (over && over.id === 'delete-footer') {
+    if (over && over.id === 'trash') {
       console.log('delete-zone', activeMaterial)
       setMaterials((prevMaterials) =>
         prevMaterials.filter(
@@ -124,13 +141,31 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     setActiveMaterial(null)
   }
 
+  const collisionDetectionAlgorithm: CollisionDetection = (args) => {
+    const pointerCollisions = pointerWithin(args)
+
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions
+    }
+
+    return closestCorners({
+      ...args,
+      droppableContainers: args.droppableContainers.filter(
+        (container): container is DroppableContainer => container.id !== 'trash'
+      ),
+      active: args.active
+    })
+  }
+
   return {
     materials,
     activeMaterial,
+    isMaterialDragging: isMaterialDraggingRef.current,
     useWidgetDragOverlay: useDragOverlayRef.current,
     addMaterial,
     handleDragStart,
     handleDragOver,
-    handleDragEnd
+    handleDragEnd,
+    collisionDetectionAlgorithm
   }
 }

@@ -14,16 +14,24 @@ import {
 } from '../Materials/materials'
 import DragableItem from '../Item/DragableItem'
 import Item from '../Item/Item'
+import DeleteFooter from '../FormContainer/DeleteFooter'
 
 interface MaterialBarProps {
+  activeMaterial: MaterialItem | null
+  dragging: boolean
   addMaterialItem: (item: MaterialItem) => void
 }
 
-const MaterialBar = ({ addMaterialItem }: MaterialBarProps) => {
+const MaterialBar = ({
+  activeMaterial,
+  dragging,
+  addMaterialItem
+}: MaterialBarProps) => {
   return (
     <Box
-      bg="slate.100"
+      position="relative"
       width="300px"
+      bg="slate.100"
       flexShrink={0}
       p="4"
       overflowY="auto"
@@ -75,6 +83,7 @@ const MaterialBar = ({ addMaterialItem }: MaterialBarProps) => {
           </AccordionItem>
         ))}
       </Accordion>
+      <DeleteFooter in={dragging && !!activeMaterial} />
     </Box>
   )
 }

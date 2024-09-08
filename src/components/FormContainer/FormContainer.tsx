@@ -1,10 +1,9 @@
-import { Box, Slide, VStack } from '@chakra-ui/react'
+import { Box, VStack } from '@chakra-ui/react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { MaterialItem } from '../Materials/materials'
 import SortableAdvancedItem from '../Item/SortableAdvancedItem'
 import WidgetItem from '../Item/WidgetItem'
 import useMaterialItemConfig from '@/hooks/useMaterialItemConfig'
-import DeleteFooter from './DeleteFooter'
 
 interface FormContainerProps {
   materials: MaterialItem[]
@@ -37,7 +36,7 @@ const FormContainer = ({
               key={material.codeId}
               idx={material.codeId}
               item={material}
-              handle={false}
+              handle={true}
               dragOverlay={useWidgetDragOverlay}
               dragging={material.codeId === activeMaterial?.codeId}
               useHook={useMaterialItemConfig}
@@ -66,9 +65,6 @@ const FormContainer = ({
           ))}
         </VStack>
       </SortableContext>
-      <Slide direction="bottom" in={!!activeMaterial} style={{ zIndex: 10 }}>
-        <DeleteFooter />
-      </Slide>
     </Box>
   )
 }
