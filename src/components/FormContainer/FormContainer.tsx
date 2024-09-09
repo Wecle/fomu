@@ -41,7 +41,11 @@ const FormContainer = ({
               dragging={material.codeId === activeMaterial?.codeId}
               useHook={useMaterialItemConfig}
               wrapperClassName={{
-                border: '1px',
+                border:
+                  material.codeId === activeMaterial?.codeId &&
+                  useWidgetDragOverlay
+                    ? '2px'
+                    : '1px',
                 borderStyle:
                   material.codeId === activeMaterial?.codeId &&
                   useWidgetDragOverlay

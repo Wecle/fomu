@@ -13,6 +13,7 @@ import {
   renderMaterialItem
 } from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
+import { v4 as uuidv4 } from 'uuid'
 
 interface FomuDndOptins {
   useWidgetDragOverlay?: boolean
@@ -29,16 +30,6 @@ export default function useFomuDnd(options?: FomuDndOptins) {
   const addMaterial = (material: MaterialItem) => {
     console.log('addMaterial', material)
   }
-
-  const getCodeId = useCallback(
-    ({ widgetType, type }: MaterialItem) => {
-      const currentMaterialCount = materials.filter(
-        (m) => m.widgetType === widgetType
-      ).length
-      return `${type}_${currentMaterialCount}`
-    },
-    [materials]
-  )
 
   const reorderExistingMaterial = (
     materials: MaterialItem[],
@@ -101,7 +92,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
     if (!material.codeId) {
       const cloneMaterial = JSON.parse(JSON.stringify(material))
-      cloneMaterial.codeId = getCodeId(cloneMaterial)
+      cloneMaterial.codeId = uuidv4()
 
       return setActiveMaterial(cloneMaterial)
     }
