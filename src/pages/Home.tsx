@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import MaterialBar from '@/components/MaterialBar/MaterialBar'
 import FormContainer from '@/components/FormContainer/FormContainer'
 import { DndContext } from '@dnd-kit/core'
@@ -8,6 +8,7 @@ import { useAdvancedForm, useFomuDnd } from '@/hooks'
 import OverlayItem from '@/components/Item/OverlayItem'
 import { AdvancedFormType } from '@/hooks/useAdvancedForm'
 import { AnyMaterialItem } from '@/components/Materials/materials'
+import FormHeader from '@/components/FormContainer/FormHeader'
 
 export const FormContext = createContext<AdvancedFormType<AnyMaterialItem>>({
   activeWidget: null,
@@ -24,6 +25,7 @@ const Home = () => {
     handleDragStart,
     handleDragOver,
     handleDragEnd,
+    handleFormChange,
     collisionDetectionAlgorithm
   } = useFomuDnd()
   const contextValue = useAdvancedForm<AnyMaterialItem>()
@@ -37,20 +39,23 @@ const Home = () => {
       modifiers={[restrictToWindowEdges]}
     >
       <FormContext.Provider value={contextValue}>
-        <Box display="flex" h="100vh" w="100vw">
+        <Flex h="100vh" w="100vw">
           <MaterialBar
             activeMaterial={activeMaterial}
             dragging={isMaterialDragging}
             addMaterialItem={addMaterial}
           />
-          <Box flex="1" p="4" bg="purple.300">
-            <FormContainer
-              materials={materials}
-              useWidgetDragOverlay={useWidgetDragOverlay}
-              activeMaterial={activeMaterial}
-            />
-          </Box>
-        </Box>
+          <Flex direction="column" flex="1">
+            <FormHeader onChange={handleFormChange} />
+            <Box flex="1" p="4" bg="purple.300">
+              <FormContainer
+                materials={materials}
+                useWidgetDragOverlay={useWidgetDragOverlay}
+                activeMaterial={activeMaterial}
+              />
+            </Box>
+          </Flex>
+        </Flex>
         <OverlayItem
           material={activeMaterial}
           dragOverlay={useWidgetDragOverlay}

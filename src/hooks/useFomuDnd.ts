@@ -19,6 +19,8 @@ interface FomuDndOptins {
   useWidgetDragOverlay?: boolean
 }
 
+export type OperationType = 'copy' | 'delete' | 'reset'
+
 export default function useFomuDnd(options?: FomuDndOptins) {
   const [materials, setMaterials] = useState<AnyMaterialItem[]>([])
   const [activeMaterial, setActiveMaterial] = useState<AnyMaterialItem | null>(
@@ -132,6 +134,25 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     setActiveMaterial(null)
   }
 
+  const handleFormChange = (
+    operation: OperationType,
+    widgetItem?: AnyMaterialItem
+  ) => {
+    switch (operation) {
+      case 'copy':
+        break
+      case 'delete':
+        setMaterials((prevMaterials) =>
+          prevMaterials.filter(
+            (material) => material.codeId !== widgetItem?.codeId
+          )
+        )
+        break
+      case 'reset':
+        break
+    }
+  }
+
   const collisionDetectionAlgorithm: CollisionDetection = (args) => {
     const pointerCollisions = pointerWithin(args)
 
@@ -157,6 +178,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     handleDragStart,
     handleDragOver,
     handleDragEnd,
+    handleFormChange,
     collisionDetectionAlgorithm
   }
 }

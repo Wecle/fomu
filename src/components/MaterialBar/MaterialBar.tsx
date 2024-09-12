@@ -34,7 +34,7 @@ const MaterialBar = ({
       bg="slate.100"
       flexShrink={0}
       p="4"
-      overflowY="auto"
+      overflow="hidden"
       css={{
         '&::-webkit-scrollbar': {
           width: '4px'
