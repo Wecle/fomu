@@ -13,7 +13,12 @@ const FmText = ({ value: defaultValue }: FmTextareaProps) => {
   }
 
   return (
-    <Input value={value} border="none" onChange={handleInputChange}></Input>
+    <Input
+      className="min-h-10"
+      value={value}
+      variant="unstyled"
+      onChange={handleInputChange}
+    ></Input>
   )
 }
 

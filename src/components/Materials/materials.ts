@@ -1,35 +1,56 @@
+export enum MaterialNameMap {
+  text = '单行文本',
+  textarea = '多行文本',
+  radio = '单选框组'
+}
+
+export enum WidgetTypeMap {
+  TEXT_WIDGET = 'textWidget',
+  TEXTAREA_WIDGET = 'textareaWidget',
+  RADIO_WIDGET = 'radioWidget'
+}
+
 export interface MaterialItemConfig {
   wrapperStyle?: React.CSSProperties
 }
 
-export interface MaterialItem {
+interface MaterialItemConfigMap {
+  [WidgetTypeMap.TEXT_WIDGET]: MaterialItemConfig & Partial<{ value: string }>
+  [WidgetTypeMap.TEXTAREA_WIDGET]: MaterialItemConfig &
+    Partial<{ value: string }>
+  [WidgetTypeMap.RADIO_WIDGET]: MaterialItemConfig &
+    Partial<{
+      value: string
+      options: {
+        label: string
+        value: string
+      }[]
+    }>
+}
+
+export interface MaterialItem<
+  T extends keyof MaterialItemConfigMap = keyof MaterialItemConfigMap
+> {
   codeId: string
   name: string
   icon: string
   type: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any
-  widgetType: string
+  widgetType: T
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderComponent?: React.FC<any>
-  __config__?: MaterialItemConfig
+  __config__?: MaterialItemConfigMap[T] // 动态根据 widgetType 匹配类型
 }
+
+export type AnyMaterialItem =
+  | MaterialItem<WidgetTypeMap.TEXT_WIDGET>
+  | MaterialItem<WidgetTypeMap.TEXTAREA_WIDGET>
+  | MaterialItem<WidgetTypeMap.RADIO_WIDGET>
 
 export interface Material {
   category: string
-  items: MaterialItem[]
-}
-
-export const materialNameMap = {
-  text: '单行文本',
-  textarea: '多行文本',
-  radio: '单选框组'
-}
-
-export const widgetTypeMap = {
-  TEXT_WIDGET: 'textWidget',
-  TEXTAREA_WIDGET: 'textareaWidget',
-  RADIO_WIDGET: 'radioWidget'
+  items: AnyMaterialItem[]
 }
 
 export const materialConfig: Material[] = [
@@ -38,33 +59,33 @@ export const materialConfig: Material[] = [
     items: [
       {
         codeId: '',
-        name: materialNameMap.text,
+        name: MaterialNameMap.text,
         icon: 'text',
         type: 'text',
         defaultValue: '',
-        widgetType: widgetTypeMap['TEXT_WIDGET'],
+        widgetType: WidgetTypeMap.TEXT_WIDGET,
         __config__: {
           wrapperStyle: {}
         }
       },
       {
         codeId: '',
-        name: materialNameMap.textarea,
+        name: MaterialNameMap.textarea,
         icon: 'textarea',
         type: 'textarea',
         defaultValue: '',
-        widgetType: widgetTypeMap['TEXTAREA_WIDGET'],
+        widgetType: WidgetTypeMap.TEXTAREA_WIDGET,
         __config__: {
           wrapperStyle: {}
         }
       },
       {
         codeId: '',
-        name: materialNameMap.radio,
+        name: MaterialNameMap.radio,
         icon: 'radio',
         type: 'radio',
         defaultValue: '',
-        widgetType: widgetTypeMap['RADIO_WIDGET'],
+        widgetType: WidgetTypeMap.RADIO_WIDGET,
         __config__: {
           wrapperStyle: {}
         }
@@ -128,9 +149,9 @@ export const materialConfig: Material[] = [
 ]
 
 const materialMap = {
-  [widgetTypeMap['TEXT_WIDGET']]: 'FmText',
-  [widgetTypeMap['TEXTAREA_WIDGET']]: 'FmTextarea',
-  [widgetTypeMap['RADIO_WIDGET']]: 'FmRadio'
+  [WidgetTypeMap.TEXT_WIDGET]: 'FmText',
+  [WidgetTypeMap.TEXTAREA_WIDGET]: 'FmTextarea',
+  [WidgetTypeMap.RADIO_WIDGET]: 'FmRadio'
 }
 
 export const renderMaterialItem = async (

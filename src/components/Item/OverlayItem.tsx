@@ -2,11 +2,11 @@ import React, { useCallback } from 'react'
 import { DragOverlay } from '@dnd-kit/core'
 import { Box } from '@chakra-ui/react'
 import Item from './Item'
-import { MaterialItem, materialNameMap } from '../Materials/materials'
+import { AnyMaterialItem, MaterialNameMap } from '../Materials/materials'
 import Handle from '../Handle/Handle'
 
 interface OverlayItemProps {
-  material: MaterialItem | null
+  material: AnyMaterialItem | null
   isDragableItem?: boolean
   dragOverlay?: boolean
 }
@@ -19,7 +19,7 @@ const OverlayItem = ({
   const DefaultItem = useCallback(() => {
     return (
       <Item
-        value={materialNameMap[material?.type as keyof typeof materialNameMap]}
+        value={MaterialNameMap[material?.type as keyof typeof MaterialNameMap]}
         dragging={true}
       />
     )

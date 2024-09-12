@@ -9,17 +9,17 @@ import {
 } from '@chakra-ui/react'
 import {
   materialConfig,
-  MaterialItem,
-  materialNameMap
+  AnyMaterialItem,
+  MaterialNameMap
 } from '../Materials/materials'
 import DragableItem from '../Item/DragableItem'
 import Item from '../Item/Item'
-import DeleteFooter from '../FormContainer/DeleteFooter'
+import DeleteFooter from './DeleteFooter'
 
 interface MaterialBarProps {
-  activeMaterial: MaterialItem | null
+  activeMaterial: AnyMaterialItem | null
   dragging: boolean
-  addMaterialItem: (item: MaterialItem) => void
+  addMaterialItem: (item: AnyMaterialItem) => void
 }
 
 const MaterialBar = ({
@@ -63,7 +63,7 @@ const MaterialBar = ({
             <AccordionPanel pb={4}>
               <SimpleGrid columns={2} spacing={2}>
                 {category.items.map((item) => (
-                  <DragableItem<MaterialItem>
+                  <DragableItem<AnyMaterialItem>
                     key={item.type}
                     type={item.type}
                     item={item}
@@ -71,8 +71,8 @@ const MaterialBar = ({
                   >
                     <Item
                       value={
-                        materialNameMap[
-                          item.type as keyof typeof materialNameMap
+                        MaterialNameMap[
+                          item.type as keyof typeof MaterialNameMap
                         ]
                       }
                     />

@@ -1,9 +1,9 @@
 import { HTMLChakraProps } from '@chakra-ui/react'
-import { MaterialItem, renderMaterialItem } from '../Materials/materials'
+import { AnyMaterialItem, renderMaterialItem } from '../Materials/materials'
 import Item, { ItemProps } from './Item'
 
 interface WidgetItemProps {
-  material: MaterialItem
+  material: AnyMaterialItem
   dragging: boolean
   wrapperClassName?: HTMLChakraProps<'div'>
 }

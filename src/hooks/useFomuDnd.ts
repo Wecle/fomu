@@ -9,7 +9,7 @@ import {
   pointerWithin
 } from '@dnd-kit/core'
 import {
-  MaterialItem,
+  AnyMaterialItem,
   renderMaterialItem
 } from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
@@ -20,19 +20,19 @@ interface FomuDndOptins {
 }
 
 export default function useFomuDnd(options?: FomuDndOptins) {
-  const [materials, setMaterials] = useState<MaterialItem[]>([])
-  const [activeMaterial, setActiveMaterial] = useState<MaterialItem | null>(
+  const [materials, setMaterials] = useState<AnyMaterialItem[]>([])
+  const [activeMaterial, setActiveMaterial] = useState<AnyMaterialItem | null>(
     null
   )
   const useDragOverlayRef = useRef(false)
   const isMaterialDraggingRef = useRef(false)
 
-  const addMaterial = (material: MaterialItem) => {
+  const addMaterial = (material: AnyMaterialItem) => {
     console.log('addMaterial', material)
   }
 
   const reorderExistingMaterial = (
-    materials: MaterialItem[],
+    materials: AnyMaterialItem[],
     oldIndex: number,
     newIndex: number
   ) => {
@@ -40,8 +40,8 @@ export default function useFomuDnd(options?: FomuDndOptins) {
   }
 
   const insertNewMaterial = (
-    materials: MaterialItem[],
-    newMaterialData: MaterialItem,
+    materials: AnyMaterialItem[],
+    newMaterialData: AnyMaterialItem,
     insertIndex: number
   ) => {
     const newMaterials = [...materials, newMaterialData]
@@ -66,7 +66,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
           ? reorderExistingMaterial(prevMaterials, oldIndex, newIndex)
           : insertNewMaterial(
               prevMaterials,
-              activeMaterial as MaterialItem,
+              activeMaterial as AnyMaterialItem,
               newIndex
             )
       })
@@ -84,7 +84,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     console.log('handleDragStart', active)
-    const material = active.data.current as MaterialItem
+    const material = active.data.current as AnyMaterialItem
 
     useDragOverlayRef.current =
       options?.useWidgetDragOverlay || !material.codeId

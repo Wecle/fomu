@@ -1,14 +1,15 @@
 import { Box, VStack } from '@chakra-ui/react'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { MaterialItem } from '../Materials/materials'
+import { AnyMaterialItem } from '../Materials/materials'
 import SortableAdvancedItem from '../Item/SortableAdvancedItem'
 import WidgetItem from '../Item/WidgetItem'
-import useMaterialItemConfig from '@/hooks/useMaterialItemConfig'
+import WidgetItemWrapper from '../Item/WidgetItemWrapper'
+import { useMaterialItemConfig } from '@/hooks'
 
 interface FormContainerProps {
-  materials: MaterialItem[]
+  materials: AnyMaterialItem[]
   useWidgetDragOverlay: boolean
-  activeMaterial: MaterialItem | null
+  activeMaterial: AnyMaterialItem | null
 }
 
 const FormContainer = ({
@@ -32,7 +33,7 @@ const FormContainer = ({
       >
         <VStack spacing="4px" align="stretch">
           {materials.map((material) => (
-            <SortableAdvancedItem<MaterialItem>
+            <SortableAdvancedItem<AnyMaterialItem>
               key={material.codeId}
               idx={material.codeId}
               item={material}
@@ -40,30 +41,26 @@ const FormContainer = ({
               dragOverlay={useWidgetDragOverlay}
               dragging={material.codeId === activeMaterial?.codeId}
               useHook={useMaterialItemConfig}
-              wrapperClassName={{
-                border:
-                  material.codeId === activeMaterial?.codeId &&
-                  useWidgetDragOverlay
-                    ? '2px'
-                    : '1px',
-                borderStyle:
-                  material.codeId === activeMaterial?.codeId &&
-                  useWidgetDragOverlay
-                    ? 'dashed'
-                    : 'solid',
-                borderColor:
-                  material.codeId === activeMaterial?.codeId &&
-                  useWidgetDragOverlay
-                    ? 'purple.500'
-                    : 'gray.300'
-              }}
-              renderItem={({ isDragging }) => (
-                <WidgetItem
+              renderItem={({
+                isDragging,
+                contextValue: { activeWidget, changeActiveWidget }
+              }) => (
+                <WidgetItemWrapper
                   material={material}
-                  dragging={
-                    isDragging || material.codeId === activeMaterial?.codeId
+                  isActive={activeWidget?.codeId === material.codeId}
+                  useDragOverlayStyle={
+                    material.codeId === activeMaterial?.codeId &&
+                    useWidgetDragOverlay
                   }
-                ></WidgetItem>
+                  onClick={() => changeActiveWidget(material)}
+                >
+                  <WidgetItem
+                    material={material}
+                    dragging={
+                      isDragging || material.codeId === activeMaterial?.codeId
+                    }
+                  ></WidgetItem>
+                </WidgetItemWrapper>
               )}
             ></SortableAdvancedItem>
           ))}

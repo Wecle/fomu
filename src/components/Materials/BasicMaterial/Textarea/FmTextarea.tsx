@@ -14,8 +14,9 @@ const FmTextarea = ({ value: defaultValue }: FmTextareaProps) => {
 
   return (
     <Textarea
+      className="min-h-20"
       value={value}
-      border="none"
+      variant="unstyled"
       onChange={handleInputChange}
     ></Textarea>
   )
