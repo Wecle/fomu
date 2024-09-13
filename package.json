@@ -24,6 +24,7 @@
     "uuid": "10.0.0"
   },
   "devDependencies": {
+    "@iconify/react": "5.0.2",
     "@nabla/vite-plugin-eslint": "2.0.4",
     "@types/node": "20.12.13",
     "@types/react": "18.3.3",

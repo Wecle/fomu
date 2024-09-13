@@ -1,8 +1,8 @@
+import { useCallback, useContext, useMemo } from 'react'
+import { Flex, Text } from '@chakra-ui/react'
+import { InlineIcon } from '@iconify/react'
 import { OperationType } from '@/hooks/useFomuDnd'
 import { FormContext } from '@/pages/Home'
-import { CloseIcon, CopyIcon, RepeatIcon } from '@chakra-ui/icons'
-import { Flex, Icon, Text } from '@chakra-ui/react'
-import { useCallback, useContext, useMemo } from 'react'
 import { AnyMaterialItem } from '../Materials/materials'
 
 interface FormHeaderProps {
@@ -38,25 +38,28 @@ const FormHeader = ({ onChange }: FormHeaderProps) => {
     return [
       {
         key: 'copy',
-        icon: CopyIcon,
+        icon: 'mdi:content-copy',
         text: '复制',
         color: 'purple.300',
+        iconSize: 1,
         disabled: !activeWidget,
         onClick: () => handleButtonClick('copy')
       },
       {
         key: 'delete',
-        icon: CloseIcon,
+        icon: 'mdi:delete-forever-outline',
         text: '删除',
         color: 'purple.300',
+        iconSize: 1.25,
         disabled: !activeWidget,
         onClick: () => handleButtonClick('delete')
       },
       {
         key: 'reset',
-        icon: RepeatIcon,
-        text: '重置',
+        icon: 'mdi:broom',
+        text: '清空',
         color: 'purple.300',
+        iconSize: 1.25,
         disabled: false,
         onClick: () => handleButtonClick('reset')
       }
@@ -80,7 +83,11 @@ const FormHeader = ({ onChange }: FormHeaderProps) => {
               opacity: item.disabled ? 0.4 : 0.7
             }}
           >
-            <Icon as={item.icon} w="2.5" h="2.5" />
+            <InlineIcon
+              icon={item.icon}
+              height={`${item.iconSize || 1}rem`}
+              width={`${item.iconSize || 1}rem`}
+            />
             <Text>{item.text}</Text>
           </Flex>
         ))}
