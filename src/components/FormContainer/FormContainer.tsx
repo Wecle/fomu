@@ -5,14 +5,17 @@ import SortableAdvancedItem from '../Item/SortableAdvancedItem'
 import WidgetItem from '../Item/WidgetItem'
 import WidgetItemWrapper from '../Item/WidgetItemWrapper'
 import { useMaterialItemConfig } from '@/hooks'
+import { PlatformType } from './FormHeader'
 
 interface FormContainerProps {
+  platform: PlatformType
   materials: AnyMaterialItem[]
   useWidgetDragOverlay: boolean
   activeMaterial: AnyMaterialItem | null
 }
 
 const FormContainer = ({
+  platform,
   materials,
   useWidgetDragOverlay,
   activeMaterial
@@ -20,12 +23,18 @@ const FormContainer = ({
   return (
     <Box
       position="relative"
-      w="100%"
       h="100%"
       margin="auto"
       p="2"
       bg="white"
       borderRadius="md"
+      w={
+        platform === 'desktop'
+          ? '100%'
+          : platform === 'tablet'
+            ? '820px'
+            : '430px'
+      }
     >
       <SortableContext
         items={materials.map((m) => m.codeId)}

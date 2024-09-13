@@ -19,8 +19,6 @@ interface FomuDndOptins {
   useWidgetDragOverlay?: boolean
 }
 
-export type OperationType = 'copy' | 'delete' | 'reset'
-
 export default function useFomuDnd(options?: FomuDndOptins) {
   const [materials, setMaterials] = useState<AnyMaterialItem[]>([])
   const [activeMaterial, setActiveMaterial] = useState<AnyMaterialItem | null>(
@@ -134,41 +132,6 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     setActiveMaterial(null)
   }
 
-  const handleFormChange = (
-    operation: OperationType,
-    widgetItem?: AnyMaterialItem
-  ) => {
-    switch (operation) {
-      case 'copy':
-        setMaterials((prevMaterials) => {
-          if (!widgetItem) return prevMaterials
-          const newMaterial = {
-            ...JSON.parse(JSON.stringify(widgetItem)),
-            codeId: uuidv4()
-          }
-          const index = prevMaterials.findIndex(
-            (m) => m.codeId === widgetItem.codeId
-          )
-          return [
-            ...prevMaterials.slice(0, index + 1),
-            newMaterial,
-            ...prevMaterials.slice(index + 1)
-          ]
-        })
-        break
-      case 'delete':
-        setMaterials((prevMaterials) =>
-          prevMaterials.filter(
-            (material) => material.codeId !== widgetItem?.codeId
-          )
-        )
-        break
-      case 'reset':
-        setMaterials([])
-        break
-    }
-  }
-
   const collisionDetectionAlgorithm: CollisionDetection = (args) => {
     const pointerCollisions = pointerWithin(args)
 
@@ -191,10 +154,10 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     isMaterialDragging: isMaterialDraggingRef.current,
     useWidgetDragOverlay: useDragOverlayRef.current,
     addMaterial,
+    setMaterials,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
-    handleFormChange,
     collisionDetectionAlgorithm
   }
 }

@@ -4,7 +4,7 @@ import MaterialBar from '@/components/MaterialBar/MaterialBar'
 import FormContainer from '@/components/FormContainer/FormContainer'
 import { DndContext } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
-import { useAdvancedForm, useFomuDnd } from '@/hooks'
+import { useAdvancedForm, useFomuDnd, useFormHeader } from '@/hooks'
 import OverlayItem from '@/components/Item/OverlayItem'
 import { AdvancedFormType } from '@/hooks/useAdvancedForm'
 import { AnyMaterialItem } from '@/components/Materials/materials'
@@ -22,13 +22,14 @@ const Home = () => {
     useWidgetDragOverlay,
     isMaterialDragging,
     addMaterial,
+    setMaterials,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
-    handleFormChange,
     collisionDetectionAlgorithm
   } = useFomuDnd()
   const contextValue = useAdvancedForm<AnyMaterialItem>()
+  const { platform, handleFormChange } = useFormHeader({ setMaterials })
 
   return (
     <DndContext
@@ -49,6 +50,7 @@ const Home = () => {
             <FormHeader onChange={handleFormChange} />
             <Box flex="1" p="4" bg="purple.300">
               <FormContainer
+                platform={platform}
                 materials={materials}
                 useWidgetDragOverlay={useWidgetDragOverlay}
                 activeMaterial={activeMaterial}
