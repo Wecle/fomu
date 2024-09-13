@@ -140,6 +140,21 @@ export default function useFomuDnd(options?: FomuDndOptins) {
   ) => {
     switch (operation) {
       case 'copy':
+        setMaterials((prevMaterials) => {
+          if (!widgetItem) return prevMaterials
+          const newMaterial = {
+            ...JSON.parse(JSON.stringify(widgetItem)),
+            codeId: uuidv4()
+          }
+          const index = prevMaterials.findIndex(
+            (m) => m.codeId === widgetItem.codeId
+          )
+          return [
+            ...prevMaterials.slice(0, index + 1),
+            newMaterial,
+            ...prevMaterials.slice(index + 1)
+          ]
+        })
         break
       case 'delete':
         setMaterials((prevMaterials) =>
@@ -149,6 +164,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
         )
         break
       case 'reset':
+        setMaterials([])
         break
     }
   }

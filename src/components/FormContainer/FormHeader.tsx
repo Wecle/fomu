@@ -1,6 +1,6 @@
 import { OperationType } from '@/hooks/useFomuDnd'
 import { FormContext } from '@/pages/Home'
-import { CloseIcon } from '@chakra-ui/icons'
+import { CloseIcon, CopyIcon, RepeatIcon } from '@chakra-ui/icons'
 import { Flex, Icon, Text } from '@chakra-ui/react'
 import { useCallback, useContext, useMemo } from 'react'
 import { AnyMaterialItem } from '../Materials/materials'
@@ -12,30 +12,61 @@ interface FormHeaderProps {
 const FormHeader = ({ onChange }: FormHeaderProps) => {
   const { activeWidget, changeActiveWidget } = useContext(FormContext)
 
-  const handleDelete = useCallback(() => {
-    if (activeWidget) {
-      onChange('delete', activeWidget)
-      changeActiveWidget(null)
-    }
-  }, [activeWidget, changeActiveWidget, onChange])
+  const handleButtonClick = useCallback(
+    (operation: OperationType) => {
+      switch (operation) {
+        case 'reset':
+          onChange(operation)
+          changeActiveWidget(null)
+          break
+        case 'delete':
+          if (activeWidget) {
+            onChange(operation, activeWidget)
+            changeActiveWidget(null)
+          }
+          break
+        default:
+          if (activeWidget) {
+            onChange(operation, activeWidget)
+          }
+      }
+    },
+    [activeWidget, changeActiveWidget, onChange]
+  )
 
   const rightButtons = useMemo(() => {
     return [
       {
+        key: 'copy',
+        icon: CopyIcon,
+        text: '复制',
+        color: 'purple.300',
+        disabled: !activeWidget,
+        onClick: () => handleButtonClick('copy')
+      },
+      {
         key: 'delete',
         icon: CloseIcon,
         text: '删除',
-        color: 'red.400',
+        color: 'purple.300',
         disabled: !activeWidget,
-        onClick: handleDelete
+        onClick: () => handleButtonClick('delete')
+      },
+      {
+        key: 'reset',
+        icon: RepeatIcon,
+        text: '重置',
+        color: 'purple.300',
+        disabled: false,
+        onClick: () => handleButtonClick('reset')
       }
     ]
-  }, [activeWidget, handleDelete])
+  }, [activeWidget, handleButtonClick])
 
   return (
     <Flex h="10" justify="space-between">
       <Flex px="4"></Flex>
-      <Flex fontSize="sm" fontWeight="bold" px="4">
+      <Flex fontSize="sm" fontWeight="bold" px="4" gap="4">
         {rightButtons.map((item) => (
           <Flex
             key={item.key}
