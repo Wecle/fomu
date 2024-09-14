@@ -9,6 +9,7 @@ import OverlayItem from '@/components/Item/OverlayItem'
 import { AdvancedFormType } from '@/hooks/useAdvancedForm'
 import { AnyMaterialItem } from '@/components/Materials/materials'
 import FormHeader from '@/components/FormContainer/FormHeader'
+import AdvanceConfigBar from '@/components/AdvanceConfigBar/AdvanceConfigBar'
 
 export const FormContext = createContext<AdvancedFormType<AnyMaterialItem>>({
   activeWidget: null,
@@ -48,7 +49,7 @@ const Home = () => {
           />
           <Flex direction="column" flex="1">
             <FormHeader onChange={handleFormChange} />
-            <Box flex="1" p="4" bg="purple.300">
+            <Box flex="1" p="4" borderRadius="md" bg="purple.300">
               <FormContainer
                 platform={platform}
                 materials={materials}
@@ -57,6 +58,9 @@ const Home = () => {
               />
             </Box>
           </Flex>
+          {contextValue.activeWidget ? (
+            <AdvanceConfigBar activeWidget={contextValue.activeWidget} />
+          ) : null}
         </Flex>
         <OverlayItem
           material={activeMaterial}

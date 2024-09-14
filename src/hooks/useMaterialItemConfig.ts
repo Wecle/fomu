@@ -6,8 +6,13 @@ const useMaterialItemConfig = ({ __config__ }: AnyMaterialItem) => {
     return __config__?.wrapperStyle || {}
   }, [__config__])
 
+  const basicConfig = useMemo(() => {
+    return __config__?.basicConfig
+  }, [__config__])
+
   return {
-    wrapperStyle
+    wrapperStyle,
+    basicConfig
   }
 }
 

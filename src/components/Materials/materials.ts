@@ -12,6 +12,17 @@ export enum WidgetTypeMap {
 
 export interface MaterialItemConfig {
   wrapperStyle?: React.CSSProperties
+  basicConfig?: {
+    title: string
+    defaultValue:
+      | string
+      | number
+      | boolean
+      | string[]
+      | number[]
+      | undefined
+      | null
+  }
 }
 
 interface MaterialItemConfigMap {
@@ -65,7 +76,11 @@ export const materialConfig: Material[] = [
         defaultValue: '',
         widgetType: WidgetTypeMap.TEXT_WIDGET,
         __config__: {
-          wrapperStyle: {}
+          wrapperStyle: {},
+          basicConfig: {
+            title: MaterialNameMap.text,
+            defaultValue: ''
+          }
         }
       },
       {
@@ -76,7 +91,11 @@ export const materialConfig: Material[] = [
         defaultValue: '',
         widgetType: WidgetTypeMap.TEXTAREA_WIDGET,
         __config__: {
-          wrapperStyle: {}
+          wrapperStyle: {},
+          basicConfig: {
+            title: MaterialNameMap.textarea,
+            defaultValue: ''
+          }
         }
       },
       {
@@ -87,7 +106,11 @@ export const materialConfig: Material[] = [
         defaultValue: '',
         widgetType: WidgetTypeMap.RADIO_WIDGET,
         __config__: {
-          wrapperStyle: {}
+          wrapperStyle: {},
+          basicConfig: {
+            title: MaterialNameMap.radio,
+            defaultValue: ''
+          }
         }
       }
     ]

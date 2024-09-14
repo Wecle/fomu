@@ -28,6 +28,7 @@ const FormContainer = ({
       p="2"
       bg="white"
       borderRadius="md"
+      transition="width 0.3s ease-in-out"
       w={
         platform === 'desktop'
           ? '100%'
