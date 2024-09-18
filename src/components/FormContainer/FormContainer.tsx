@@ -4,7 +4,7 @@ import { AnyMaterialItem } from '../Materials/materials'
 import SortableAdvancedItem from '../Item/SortableAdvancedItem'
 import WidgetItem from '../Item/WidgetItem'
 import WidgetItemWrapper from '../Item/WidgetItemWrapper'
-import { useMaterialItemConfig } from '@/hooks'
+import { useFormContext, useMaterialItemConfig } from '@/hooks'
 import { PlatformType } from './FormHeader'
 
 interface FormContainerProps {
@@ -20,6 +20,8 @@ const FormContainer = ({
   useWidgetDragOverlay,
   activeMaterial
 }: FormContainerProps) => {
+  const { activeWidget, changeActiveWidget } = useFormContext()
+
   return (
     <Box
       position="relative"
@@ -51,10 +53,7 @@ const FormContainer = ({
               dragOverlay={useWidgetDragOverlay}
               dragging={material.codeId === activeMaterial?.codeId}
               useHook={useMaterialItemConfig}
-              renderItem={({
-                isDragging,
-                contextValue: { activeWidget, changeActiveWidget }
-              }) => (
+              renderItem={({ isDragging }) => (
                 <WidgetItemWrapper
                   material={material}
                   isActive={activeWidget?.codeId === material.codeId}

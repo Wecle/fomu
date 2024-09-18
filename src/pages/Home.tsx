@@ -1,20 +1,13 @@
-import { createContext } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import MaterialBar from '@/components/MaterialBar/MaterialBar'
 import FormContainer from '@/components/FormContainer/FormContainer'
 import { DndContext } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
-import { useAdvancedForm, useFomuDnd, useFormHeader } from '@/hooks'
+import { useFomuDnd, useFormHeader } from '@/hooks'
 import OverlayItem from '@/components/Item/OverlayItem'
-import { AdvancedFormType } from '@/hooks/useAdvancedForm'
-import { AnyMaterialItem } from '@/components/Materials/materials'
 import FormHeader from '@/components/FormContainer/FormHeader'
 import AdvanceConfigBar from '@/components/AdvanceConfigBar/AdvanceConfigBar'
-
-export const FormContext = createContext<AdvancedFormType<AnyMaterialItem>>({
-  activeWidget: null,
-  changeActiveWidget: () => {}
-})
+import FormProvider from '@/hooks/useFormContext/FormProvider'
 
 const Home = () => {
   const {
@@ -29,7 +22,6 @@ const Home = () => {
     handleDragEnd,
     collisionDetectionAlgorithm
   } = useFomuDnd()
-  const contextValue = useAdvancedForm<AnyMaterialItem>()
   const { platform, handleFormChange } = useFormHeader({ setMaterials })
 
   return (
@@ -40,7 +32,7 @@ const Home = () => {
       collisionDetection={collisionDetectionAlgorithm}
       modifiers={[restrictToWindowEdges]}
     >
-      <FormContext.Provider value={contextValue}>
+      <FormProvider setMaterials={setMaterials}>
         <Flex h="100vh" w="100vw">
           <MaterialBar
             activeMaterial={activeMaterial}
@@ -58,15 +50,13 @@ const Home = () => {
               />
             </Box>
           </Flex>
-          {contextValue.activeWidget ? (
-            <AdvanceConfigBar activeWidget={contextValue.activeWidget} />
-          ) : null}
+          <AdvanceConfigBar />
         </Flex>
         <OverlayItem
           material={activeMaterial}
           dragOverlay={useWidgetDragOverlay}
         />
-      </FormContext.Provider>
+      </FormProvider>
     </DndContext>
   )
 }

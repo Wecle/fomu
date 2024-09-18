@@ -1,6 +1,7 @@
 import { Box, Radio, RadioGroup, Stack } from '@chakra-ui/react'
 
 interface FmRadioProps {
+  codeId: string
   value: string
   dragging?: boolean
 }

@@ -13,17 +13,14 @@ export enum WidgetTypeMap {
 export interface MaterialItemConfig {
   wrapperStyle?: React.CSSProperties
   basicConfig?: {
-    title: string
-    defaultValue:
-      | string
-      | number
-      | boolean
-      | string[]
-      | number[]
-      | undefined
-      | null
+    title?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    defaultValue?: any
   }
 }
+
+export type MaterialItemConfigKey = keyof MaterialItemConfig
+export type MaterialItemConfigValue = MaterialItemConfig[MaterialItemConfigKey]
 
 interface MaterialItemConfigMap {
   [WidgetTypeMap.TEXT_WIDGET]: MaterialItemConfig & Partial<{ value: string }>

@@ -1,8 +1,8 @@
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Flex, Text } from '@chakra-ui/react'
 import { InlineIcon } from '@iconify/react'
-import { FormContext } from '@/pages/Home'
 import { AnyMaterialItem } from '../Materials/materials'
+import { useFormContext } from '@/hooks'
 
 interface FormHeaderProps {
   onChange: (operation: OperationType, widgetItem?: AnyMaterialItem) => void
@@ -29,7 +29,7 @@ export type OperationType =
   | 'mobile'
 
 const FormHeader = ({ onChange }: FormHeaderProps) => {
-  const { activeWidget, changeActiveWidget } = useContext(FormContext)
+  const { activeWidget, changeActiveWidget } = useFormContext()
 
   const handleButtonClick = useCallback(
     (operation: OperationType) => {

@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react'
 import {
   Accordion,
   AccordionButton,
@@ -9,25 +10,45 @@ import {
   Input,
   Text
 } from '@chakra-ui/react'
-import { AnyMaterialItem } from '@/components/Materials/materials'
-import { useMaterialItemConfig } from '@/hooks'
-import { useMemo } from 'react'
+import { useFormContext, useMaterialItemConfig } from '@/hooks'
 
-interface AdvanceConfigBarProps {
-  activeWidget: AnyMaterialItem
-}
-
-const AdvanceConfigBar = ({ activeWidget }: AdvanceConfigBarProps) => {
+const AdvanceConfigBar = () => {
+  const { activeWidget, updateConfig } = useFormContext()
   const { basicConfig } = useMaterialItemConfig(activeWidget)
 
-  const getComponent = (type: string, props: Record<string, unknown>) => {
-    switch (type) {
-      case 'input':
-        return <Input {...props} />
-      default:
-        return null
-    }
-  }
+  const getComponent = useCallback(
+    (type: string, props: Record<string, unknown>) => {
+      switch (type) {
+        case 'input':
+          return <Input {...props} />
+        default:
+          return null
+      }
+    },
+    []
+  )
+
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (activeWidget?.codeId) {
+        updateConfig(activeWidget.codeId, 'basicConfig', {
+          title: e.target.value
+        })
+      }
+    },
+    [activeWidget?.codeId, updateConfig]
+  )
+
+  const handleDefaultValueChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (activeWidget?.codeId) {
+        updateConfig(activeWidget.codeId, 'basicConfig', {
+          defaultValue: e.target.value
+        })
+      }
+    },
+    [activeWidget?.codeId, updateConfig]
+  )
 
   const configs = useMemo(() => {
     const allConfig = []
@@ -39,10 +60,8 @@ const AdvanceConfigBar = ({ activeWidget }: AdvanceConfigBarProps) => {
             key: 'title',
             label: '标题',
             component: getComponent('input', {
-              value: basicConfig.title || activeWidget.name,
-              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                console.log(e.target.value)
-              }
+              value: basicConfig.title || activeWidget?.name,
+              onChange: handleTitleChange
             })
           },
           {
@@ -50,18 +69,22 @@ const AdvanceConfigBar = ({ activeWidget }: AdvanceConfigBarProps) => {
             label: '默认值',
             component: getComponent('input', {
               value: basicConfig.defaultValue,
-              onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                console.log(e.target.value)
-              }
+              onChange: handleDefaultValueChange
             })
           }
         ]
       })
     }
     return allConfig
-  }, [activeWidget.name, basicConfig])
+  }, [
+    activeWidget?.name,
+    basicConfig,
+    getComponent,
+    handleDefaultValueChange,
+    handleTitleChange
+  ])
 
-  return (
+  return activeWidget ? (
     <Box width="300px" bg="slate.100" flexShrink={0} p="4">
       <Accordion allowMultiple defaultIndex={[0]}>
         {configs.map((config, index) => (
@@ -86,7 +109,7 @@ const AdvanceConfigBar = ({ activeWidget }: AdvanceConfigBarProps) => {
         ))}
       </Accordion>
     </Box>
-  )
+  ) : null
 }
 
 export default AdvanceConfigBar
