@@ -53,7 +53,7 @@ const Item = ({ value, dragging, wrapperClassName, renderItem }: ItemProps) => {
 
   useEffect(() => {
     renderContent()
-  }, [])
+  }, [renderContent])
 
   if (renderItem && !renderedContent) {
     return (

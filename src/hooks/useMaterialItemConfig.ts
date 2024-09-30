@@ -1,13 +1,18 @@
 import { useMemo } from 'react'
-import { MaterialItem } from '@/components/Materials/materials'
+import { AnyMaterialItem } from '@/components/Materials/materials'
 
-const useMaterialItemConfig = ({ __config__ }: MaterialItem) => {
+const useMaterialItemConfig = (materialItem: AnyMaterialItem | null) => {
   const wrapperStyle = useMemo(() => {
-    return __config__?.wrapperStyle || {}
-  }, [__config__])
+    return materialItem?.__config__?.wrapperStyle || {}
+  }, [materialItem?.__config__?.wrapperStyle])
+
+  const basicConfig = useMemo(() => {
+    return materialItem?.__config__?.basicConfig
+  }, [materialItem?.__config__?.basicConfig])
 
   return {
-    wrapperStyle
+    wrapperStyle,
+    basicConfig
   }
 }
 

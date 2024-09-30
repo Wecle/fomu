@@ -9,39 +9,30 @@ import {
   pointerWithin
 } from '@dnd-kit/core'
 import {
-  MaterialItem,
+  AnyMaterialItem,
   renderMaterialItem
 } from '@/components/Materials/materials'
 import { arrayMove } from '@dnd-kit/sortable'
+import { v4 as uuidv4 } from 'uuid'
 
 interface FomuDndOptins {
   useWidgetDragOverlay?: boolean
 }
 
 export default function useFomuDnd(options?: FomuDndOptins) {
-  const [materials, setMaterials] = useState<MaterialItem[]>([])
-  const [activeMaterial, setActiveMaterial] = useState<MaterialItem | null>(
+  const [materials, setMaterials] = useState<AnyMaterialItem[]>([])
+  const [activeMaterial, setActiveMaterial] = useState<AnyMaterialItem | null>(
     null
   )
   const useDragOverlayRef = useRef(false)
   const isMaterialDraggingRef = useRef(false)
 
-  const addMaterial = (material: MaterialItem) => {
+  const addMaterial = (material: AnyMaterialItem) => {
     console.log('addMaterial', material)
   }
 
-  const getCodeId = useCallback(
-    ({ widgetType, type }: MaterialItem) => {
-      const currentMaterialCount = materials.filter(
-        (m) => m.widgetType === widgetType
-      ).length
-      return `${type}_${currentMaterialCount}`
-    },
-    [materials]
-  )
-
   const reorderExistingMaterial = (
-    materials: MaterialItem[],
+    materials: AnyMaterialItem[],
     oldIndex: number,
     newIndex: number
   ) => {
@@ -49,8 +40,8 @@ export default function useFomuDnd(options?: FomuDndOptins) {
   }
 
   const insertNewMaterial = (
-    materials: MaterialItem[],
-    newMaterialData: MaterialItem,
+    materials: AnyMaterialItem[],
+    newMaterialData: AnyMaterialItem,
     insertIndex: number
   ) => {
     const newMaterials = [...materials, newMaterialData]
@@ -75,7 +66,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
           ? reorderExistingMaterial(prevMaterials, oldIndex, newIndex)
           : insertNewMaterial(
               prevMaterials,
-              activeMaterial as MaterialItem,
+              activeMaterial as AnyMaterialItem,
               newIndex
             )
       })
@@ -93,7 +84,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     console.log('handleDragStart', active)
-    const material = active.data.current as MaterialItem
+    const material = active.data.current as AnyMaterialItem
 
     useDragOverlayRef.current =
       options?.useWidgetDragOverlay || !material.codeId
@@ -101,7 +92,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
 
     if (!material.codeId) {
       const cloneMaterial = JSON.parse(JSON.stringify(material))
-      cloneMaterial.codeId = getCodeId(cloneMaterial)
+      cloneMaterial.codeId = uuidv4()
 
       return setActiveMaterial(cloneMaterial)
     }
@@ -163,6 +154,7 @@ export default function useFomuDnd(options?: FomuDndOptins) {
     isMaterialDragging: isMaterialDraggingRef.current,
     useWidgetDragOverlay: useDragOverlayRef.current,
     addMaterial,
+    setMaterials,
     handleDragStart,
     handleDragOver,
     handleDragEnd,
